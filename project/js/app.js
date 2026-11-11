@@ -19,7 +19,8 @@
     const fallback=D.element('div','hero-image-fallback');
     fallback.append(D.element('span','hero-image-korean','한옥'),D.element('strong','',label),D.element('span','','Gastronomia coreana'));
     return fallback;
-  }  const heroCarousel=document.querySelector('[data-hero-bg-carousel]');
+  }
+  const heroCarousel=document.querySelector('[data-hero-bg-carousel]');
   if(heroCarousel){
     const slides=[...heroCarousel.querySelectorAll('[data-hero-bg-slide]')];
     const dots=[...document.querySelectorAll('[data-hero-bg-dot]')];
@@ -27,19 +28,39 @@
     const next=document.querySelector('[data-hero-bg-next]');
     let current=Math.max(0,slides.findIndex(slide=>slide.classList.contains('is-active')));
     let timer=null;
+    const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+    const headlines=[
+      {kicker:'NOSSA COZINHA',title:'Sabores que aproximam',description:'Tradição e cuidado em cada encontro à mesa.'},
+      {kicker:'SABORES DA HANOK',title:'Feito para compartilhar',description:'Cada prato carrega uma história de sabores e afeto.'},
+      {kicker:'A EXPERIÊNCIA',title:'Seu lugar à mesa',description:'Um ambiente para viver bons momentos.'}
+    ];
+    const kicker=document.getElementById('hero-slide-kicker');
+    const heading=document.getElementById('hero-slide-title');
+    const description=document.getElementById('hero-slide-description');
+    const counter=document.getElementById('hero-slide-current');
     const activate=index=>{
       current=(index+slides.length)%slides.length;
-      slides.forEach((slide,i)=>slide.classList.toggle('is-active',i===current));
-      dots.forEach((dot,i)=>{const active=i===current;dot.classList.toggle('is-active',active);active?dot.setAttribute('aria-current','true'):dot.removeAttribute('aria-current');});
+      slides.forEach((slide,i)=>{slide.classList.toggle('is-active',i===current);slide.setAttribute('aria-hidden',String(i!==current));});
+      dots.forEach((dot,i)=>{const active=i===current;dot.classList.toggle('is-active',active);dot.setAttribute('aria-pressed',String(active));});
+      if(kicker&&heading&&description){
+        const h=headlines[current]||headlines[0];kicker.textContent=h.kicker;heading.textContent=h.title;description.textContent=h.description;
+        heading.classList.remove('hero-title-animate');void heading.offsetWidth;heading.classList.add('hero-title-animate');
+      }
+      if(counter)counter.textContent=String(current+1).padStart(2,'0');
     };
-    const start=()=>{if(slides.length<2)return;clearInterval(timer);timer=setInterval(()=>activate(current+1),5200);};
     const stop=()=>{clearInterval(timer);timer=null;};
-    prev?.addEventListener('click',()=>{activate(current-1);start();});
-    next?.addEventListener('click',()=>{activate(current+1);start();});
+    const start=()=>{stop();if(slides.length>1&&!reducedMotion.matches&&!document.hidden){timer=setInterval(()=>activate(current+1),5700);}};
+    const navigate=offset=>{activate(current+offset);start();};
+    prev?.addEventListener('click',()=>navigate(-1));
+    next?.addEventListener('click',()=>navigate(1));
     dots.forEach((dot,index)=>dot.addEventListener('click',()=>{activate(index);start();}));
-    heroCarousel.addEventListener('mouseenter',stop);
-    heroCarousel.addEventListener('mouseleave',start);
+    const heroSection=heroCarousel.closest('.hero');
+    heroSection?.addEventListener('mouseenter',stop);
+    heroSection?.addEventListener('mouseleave',start);
+    heroSection?.addEventListener('focusin',stop);
+    heroSection?.addEventListener('focusout',event=>{if(!heroSection.contains(event.relatedTarget))start();});
     document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+    reducedMotion.addEventListener?.('change',start);
     activate(current);start();
   }
   let filter = 'todos';
@@ -60,7 +81,7 @@
   }
   function addToCart(id){
     const product=D.getProducts().find(p=>p.id===id);if(!product)return notify('Produto não encontrado.');
-    cart.set(id,Math.min(99,(cart.get(id)||0)+1));persistCart();renderCart();notify(`${product.name} adicionado ao pedido.`);
+    cart.set(id,Math.min(99,(cart.get(id)||0)+1));persistCart();renderCart();const cartButton=$('open-cart');cartButton.classList.remove('cart-attention');void cartButton.offsetWidth;cartButton.classList.add('cart-attention');notify(`${product.name} adicionado ao pedido.`);
   }
   function makeProductCard(p){
     const article=D.element('article','product-card');
@@ -77,13 +98,13 @@
     }else picture.append(D.element('span','no-image',p.name));
     picture.append(D.element('span','product-tag',D.CATEGORIES[p.category]));
     const overlay=D.element('div','product-image-overlay');
-    overlay.append(D.element('strong','product-image-title',p.name),D.element('span','product-visual-note','Unsplash · imagem ilustrativa'));
+    overlay.append(D.element('strong','product-image-title',p.name));
     picture.append(overlay);
     const content=D.element('div','product-content');const heading=D.element('div','product-heading');
     heading.append(D.element('h3','',p.name),D.element('span','price',D.money(p.price)));
     const description=D.element('p','',p.description);
     const meta=D.element('div','product-meta');
-    meta.append(D.element('span','menu-meta-chip',D.CATEGORIES[p.category]),D.element('span','menu-meta-chip menu-meta-chip-soft',p.category==='bebidas'?'Item ilustrativo':'Receita destaque'));
+    meta.append(D.element('span','menu-meta-chip',D.CATEGORIES[p.category]),D.element('span','menu-meta-chip menu-meta-chip-soft',p.category==='bebidas'?'Para brindar':'Feito com carinho'));
     const add=D.element('button','button button-primary button-wide','Adicionar ao pedido');add.type='button';add.addEventListener('click',()=>addToCart(p.id));
     content.append(heading,description,meta,add);
     article.append(picture,content);return article;
@@ -93,7 +114,7 @@
     const products=D.getProducts().filter(p=>(filter==='todos'||p.category===filter) && (!search||(p.name+' '+p.description).toLocaleLowerCase('pt-BR').includes(search)));
     const grid=$('menu-grid');grid.replaceChildren();
     if(!products.length){grid.append(D.element('div','empty-state','Nenhum produto encontrado. Tente outra busca ou categoria.'));return;}
-    products.forEach(p=>grid.append(makeProductCard(p)));
+    products.forEach(p=>grid.append(makeProductCard(p)));UI?.observeReveal?.(grid.querySelectorAll('.product-card'));
   }
   document.querySelectorAll('.filter-button').forEach(button=>button.addEventListener('click',()=>{
     filter=button.dataset.category;
@@ -133,13 +154,13 @@
   orderForm.addEventListener('submit',event=>{
     event.preventDefault();const feedback=$('order-feedback'),entries=cartEntries();
     if(!entries.length){feedback.textContent='Adicione um produto antes de continuar.';feedback.classList.add('error');return;}
-    if(!A?.current()){feedback.classList.add('error');feedback.textContent='Faça login para salvar o pedido de demonstração.';requestLogin();return;}
+    if(!A?.current()){feedback.classList.add('error');feedback.textContent='Entre na sua conta para salvar o pedido.';requestLogin();return;}
     const form=new FormData(orderForm);const customer=String(form.get('customer')||'').trim();const method=String(form.get('fulfillment')||'');const address=String(form.get('address')||'').trim();
     if(!customer||(method==='entrega'&&!address)){feedback.textContent='Preencha os campos obrigatórios.';feedback.classList.add('error');return;}
     const order={id:D.id(),userId:A.current().id,customer,fulfillment:method,address:method==='entrega'?address:'',items:entries.map(({p,quantity})=>({productId:p.id,name:p.name,unitPrice:p.price,quantity})),total:Math.round(entries.reduce((sum,{p,quantity})=>sum+p.price*quantity,0)*100)/100,status:'Recebido',createdAt:new Date().toISOString()};
     if(!D.saveOrder(order)){feedback.textContent='Não foi possível salvar: armazenamento do navegador indisponível.';feedback.classList.add('error');return;}
     cart.clear();persistCart();renderCart();orderForm.reset();deliveryField.hidden=true;deliveryAddress.required=false;
-    feedback.classList.remove('error');feedback.textContent='Pedido de demonstração salvo somente neste navegador. Nenhum pedido foi enviado ou pago.';
+    feedback.classList.remove('error');feedback.textContent='Pedido salvo neste navegador. Não foi enviado ao restaurante.';
   });
 
   const reservationForm=$('reservation-form'),dateInput=$('reservation-date'),timeSelect=$('reservation-time');
@@ -170,7 +191,7 @@
     if(!A?.current()){feedback.classList.add('error');feedback.textContent='Entre na sua conta para solicitar uma reserva.';requestLogin();return;}
     const reservation={id:D.id(),userId:A.current().id,customer,date,time,guests,notes:String(form.get('notes')||'').trim(),status:'Pendente',createdAt:new Date().toISOString()};
     if(!D.saveReservation(reservation)){feedback.classList.add('error');feedback.textContent='Não foi possível salvar: armazenamento do navegador indisponível.';return;}
-    reservationForm.reset();updateTimes();feedback.classList.remove('error');feedback.textContent='Solicitação de demonstração salva neste navegador. Nenhuma reserva foi enviada ou confirmada.';
+    reservationForm.reset();updateTimes();feedback.classList.remove('error');feedback.textContent='Solicitação salva neste navegador. Não foi enviada ao restaurante.';
   });
   window.addEventListener('storage',()=>{renderMenu();renderCart();});
   renderMenu();renderCart();

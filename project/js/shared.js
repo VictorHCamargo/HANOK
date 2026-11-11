@@ -7,8 +7,8 @@
     {id:'demo-bulgogi',name:'Bulgogi',description:'Carne marinada em molho de inspiração coreana, com gergelim.',category:'pratos',price:89,image:'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80'},
     {id:'demo-bibimbap',name:'Dolsot Bibimbap',description:'Tigela de arroz com vegetais temperados e acompanhamentos.',category:'pratos',price:78,image:'https://images.unsplash.com/photo-1553163147-622ab57be1c7?auto=format&fit=crop&w=1200&q=80'},
     {id:'demo-dakgangjeong',name:'Dakgangjeong',description:'Frango crocante com molho levemente picante e agridoce.',category:'entradas',price:54,image:'https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&w=1200&q=80'},
-    {id:'demo-soju',name:'Soju (exemplo)',description:'Bebida coreana. Item ilustrativo, destinado a maiores de 18 anos.',category:'bebidas',price:42,image:'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1200&q=80'},
-    {id:'demo-makgeolli',name:'Makgeolli (exemplo)',description:'Bebida fermentada de arroz. Item ilustrativo para maiores de 18 anos.',category:'bebidas',price:58,image:'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=80'}
+    {id:'demo-soju',name:'Soju',description:'Bebida coreana. Bebida coreana tradicional para maiores de 18 anos.',category:'bebidas',price:42,image:'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1200&q=80'},
+    {id:'demo-makgeolli',name:'Makgeolli',description:'Bebida fermentada de arroz. Bebida destinada a maiores de 18 anos.',category:'bebidas',price:58,image:'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=80'}
   ]);
   const CATEGORIES = Object.freeze({entradas:'Entradas',pratos:'Pratos',bebidas:'Bebidas'});
   const ORDER_STATUSES = Object.freeze(['Recebido','Em preparo','Pronto','Concluído','Cancelado']);
@@ -35,7 +35,12 @@
   function normalizeProduct(p) {
     if (!p || typeof p !== 'object' || typeof p.id !== 'string' || typeof p.name !== 'string') return null;
     if (!(p.category in CATEGORIES) || !Number.isFinite(Number(p.price)) || Number(p.price) <= 0) return null;
-    return {id:p.id.slice(0,100),name:p.name.slice(0,75),description:String(p.description||'').slice(0,240),category:p.category,price:Math.round(Number(p.price)*100)/100,image:safeImage(p.image)};
+    // Ajuste de textos legados que já possam estar salvos no navegador.
+    let name=p.name,description=String(p.description||'');
+    if(p.id==='demo-soju'&&name==='Soju (exemplo)')name='Soju';
+    if(p.id==='demo-makgeolli'&&name==='Makgeolli (exemplo)')name='Makgeolli';
+    description=description.replace('Item ilustrativo, destinado a maiores de 18 anos.','Bebida coreana tradicional para maiores de 18 anos.').replace('Item ilustrativo para maiores de 18 anos.','Bebida destinada a maiores de 18 anos.');
+    return {id:p.id.slice(0,100),name:name.slice(0,75),description:description.slice(0,240),category:p.category,price:Math.round(Number(p.price)*100)/100,image:safeImage(p.image)};
   }
   function getProducts() {return read('products',DEFAULT_PRODUCTS).map(normalizeProduct).filter(Boolean);}
   function saveProducts(list) { return write('products',list.map(normalizeProduct).filter(Boolean)); }

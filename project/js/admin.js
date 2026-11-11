@@ -7,7 +7,7 @@
  document.body.classList.add('authorized');
  const $=id=>document.getElementById(id);
  const form=$('product-form'),field=n=>form.elements.namedItem(n);
- const viewLabels={overview:['Visão geral','Acompanhe as operações do protótipo em um só lugar.'],products:['Cardápio','Organize os sabores e valores da HANOK.'],orders:['Pedidos','Acompanhe o preparo e a conclusão dos pedidos.'],reservations:['Reservas','Gerencie as solicitações de atendimento.'],users:['Usuários e acessos','Controle os perfis dos usuários cadastrados.'],settings:['Configurações','Personalize sua experiência de administração.']};
+ const viewLabels={overview:['Visão geral','Todos os detalhes da HANOK em um só lugar.'],products:['Cardápio','Organize os sabores e valores da HANOK.'],orders:['Pedidos','Acompanhe o preparo e a conclusão dos pedidos.'],reservations:['Reservas','Gerencie as solicitações de atendimento.'],users:['Usuários e acessos','Controle os perfis dos usuários cadastrados.'],settings:['Configurações','Personalize sua experiência de administração.']};
  let view='overview',query='';
  $('admin-name').textContent=user.name.split(' ')[0];
  $('today-chip').textContent=new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'long',year:'numeric'}).format(new Date());
@@ -58,7 +58,7 @@
    if(!D.saveProducts(data)){feedback('Falha ao salvar. Verifique o armazenamento do navegador.',true);return;}
    resetForm();feedback('Produto salvo com sucesso.');renderAll();
  });
- $('reset-products').addEventListener('click',()=>{if(!confirm('Substituir o cardápio atual pelos produtos de exemplo?'))return;if(!D.saveProducts(D.DEFAULT_PRODUCTS))return UI.toast('Falha ao restaurar os produtos.','error');resetForm();UI.toast('Produtos de exemplo restaurados.','success');renderAll();});
+ $('reset-products').addEventListener('click',()=>{if(!confirm('Deseja restaurar o cardápio inicial?'))return;if(!D.saveProducts(D.DEFAULT_PRODUCTS))return UI.toast('Falha ao restaurar os produtos.','error');resetForm();UI.toast('Cardápio restaurado.','success');renderAll();});
  function statusControl(record,type){
    const sel=el('select','status-select');sel.setAttribute('aria-label','Alterar status');const opts=type==='order'?D.ORDER_STATUSES:D.RESERVATION_STATUSES;
    opts.forEach(s=>{const op=el('option','',s);op.value=s;sel.append(op);});sel.value=opts.includes(record.status)?record.status:opts[0];
@@ -74,7 +74,7 @@
    if(type==='order'){
      const lines=Array.isArray(item.items)?item.items.map(i=>`${Number(i.quantity)||0}× ${String(i.name||'Item')}`).join(', '):'Sem itens';
      data.append(el('strong','',`${item.customer||'Cliente'} · ${D.money(item.total)}`),el('small','',lines),el('small','',`${item.fulfillment==='entrega'?'Entrega':'Retirada'} • ${dateTime(item.createdAt)}`));
-     if(item.fulfillment==='entrega'&&item.address&&!compact)data.append(el('small','',`Endereço teste: ${item.address}`));
+     if(item.fulfillment==='entrega'&&item.address&&!compact)data.append(el('small','',`Endereço: ${item.address}`));
    }else data.append(el('strong','',`${item.customer||'Cliente'} · ${item.guests||'?'} pessoa(s)`),el('small','',`${D.formatDate(item.date)} às ${item.time||'—'}`),el('small','',item.notes||'Sem observações'));
    if(compact)right.append(pill(item.status));else right.append(pill(item.status),statusControl(item,type));row.append(badge,data,right);return row;
  }

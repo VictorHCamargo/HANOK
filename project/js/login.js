@@ -6,7 +6,7 @@
  const show=(mode)=>{const login=mode==='login';$('login-form').hidden=!login;$('register-form').hidden=login;for(const [id,active] of [['tab-login',login],['tab-register',!login]]){$(id).classList.toggle('active',active);$(id).setAttribute('aria-pressed',String(active));}$('login-feedback').textContent='';$('register-feedback').textContent='';};
  $('tab-login').addEventListener('click',()=>show('login'));
  $('tab-register').addEventListener('click',()=>show('register'));
- $('fill-demo').addEventListener('click',()=>{show('login');$('login-form').elements.email.value='admin@hanok.demo';$('login-form').elements.password.value='Hanok@2026';$('login-form').elements.password.focus();});
+
  if(params.get('erro')==='permissao')UI.toast('Você precisa ser administrador para acessar essa área.','error');
  function redirect(user){const next=safeNext();location.assign(next&&!(next==='admin.html'&&user.role!=='admin')?next:user.role==='admin'?'admin.html':'minha-conta.html');}
  $('login-form').addEventListener('submit',async e=>{

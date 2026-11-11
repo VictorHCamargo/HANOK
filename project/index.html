@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101013">
-  <meta name="description" content="HANOK — protótipo de restaurante coreano com cardápio, carrinho e solicitação de reserva.">
+  <meta name="description" content="HANOK — sabores da culinária coreana, cardápio e experiências para compartilhar.">
   <title>HANOK | Restaurante Coreano</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,7 +38,6 @@
   </header>
 
   <main id="conteudo">
-    <section class="demo-banner" aria-label="Aviso de demonstração"><div class="container"><strong>Protótipo acadêmico:</strong> contas, pedidos e reservas são simulados somente neste navegador. Nenhuma solicitação ou pagamento é enviado a um serviço real.</div></section>
     <section class="hero section hero-bg-hero" id="inicio">
       <div class="hero-bg-carousel" data-hero-bg-carousel aria-label="Carrossel de imagens da apresentação">
         <div class="hero-bg-slide is-active" data-hero-bg-slide style="background-image:url('https://images.unsplash.com/photo-1553163147-622ab57be1c7?auto=format&fit=crop&w=1600&q=80')">
@@ -58,22 +57,28 @@
           <h1>HANOK: sabor e tradição <span>em perfeito equilíbrio.</span></h1>
           <p>Explore pratos inspirados na gastronomia coreana, monte seu pedido e conheça a experiência HANOK.</p>
           <div class="actions"><a class="button button-primary" href="#cardapio">Explorar cardápio <span aria-hidden="true">→</span></a><a class="button button-outline button-on-dark" href="#reserva">Solicitar reserva</a></div>
-          <div class="hero-highlights hero-highlights-dark"><div><strong>한옥</strong><span>Inspiração coreana</span></div><div><strong>5 valores</strong><span>Harmonia e acolhimento</span></div><div><strong>Online</strong><span>Protótipo interativo</span></div></div>
+          <div class="hero-highlights hero-highlights-dark"><div><strong>한옥</strong><span>Inspiração coreana</span></div><div><strong>5 valores</strong><span>Harmonia e acolhimento</span></div><div><strong>HANOK</strong><span>Sabor em cada encontro</span></div></div>
         </div>
-        <div class="hero-floating-panel">
-          <span class="hero-sticker">Tradição + afeto</span>
+        <div class="hero-floating-panel" aria-label="Destaques da HANOK">
           <div class="hero-panel-card">
-            <span class="hero-panel-kicker">Destaques da casa</span>
-            <strong class="hero-panel-title">Um carrossel de fundo mais imersivo</strong>
-            <p>Agora as imagens passam ao fundo da apresentação para valorizar mais a identidade visual do restaurante.</p>
-            <div class="carousel-indicators hero-indicators" role="tablist" aria-label="Destaques da apresentação">
-              <button class="carousel-dot is-active" type="button" data-hero-bg-dot aria-label="Mostrar slide 1" aria-current="true"></button>
-              <button class="carousel-dot" type="button" data-hero-bg-dot aria-label="Mostrar slide 2"></button>
-              <button class="carousel-dot" type="button" data-hero-bg-dot aria-label="Mostrar slide 3"></button>
-            </div>
+            <span class="hero-panel-kicker" id="hero-slide-kicker">NOSSA COZINHA</span>
+            <strong class="hero-panel-title" id="hero-slide-title">Sabores que aproximam</strong>
+            <p id="hero-slide-description">Receitas, aromas e encontros para transformar cada refeição em um momento especial.</p>
           </div>
-          <button class="carousel-control prev hero-bg-control" type="button" data-hero-bg-prev aria-label="Slide anterior">‹</button>
-          <button class="carousel-control next hero-bg-control" type="button" data-hero-bg-next aria-label="Próximo slide">›</button>
+          <div class="hero-carousel-navigation" aria-label="Controle dos destaques">
+            <button class="carousel-control prev hero-bg-control" type="button" data-hero-bg-prev aria-label="Imagem anterior" title="Imagem anterior">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14.5 5-7 7 7 7"/></svg>
+            </button>
+            <div class="carousel-indicators hero-indicators" role="group" aria-label="Selecionar imagem de fundo">
+              <button class="carousel-dot is-active" type="button" data-hero-bg-dot aria-label="Ver imagem 1 de 3" aria-pressed="true"></button>
+              <button class="carousel-dot" type="button" data-hero-bg-dot aria-label="Ver imagem 2 de 3" aria-pressed="false"></button>
+              <button class="carousel-dot" type="button" data-hero-bg-dot aria-label="Ver imagem 3 de 3" aria-pressed="false"></button>
+            </div>
+            <button class="carousel-control next hero-bg-control" type="button" data-hero-bg-next aria-label="Próxima imagem" title="Próxima imagem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9.5 5 7 7-7 7"/></svg>
+            </button>
+            <span class="hero-slide-index" aria-hidden="true"><b id="hero-slide-current">01</b><span>/ 03</span></span>
+          </div>
         </div>
       </div>
     </section>
@@ -92,35 +97,34 @@
     </section>
 
     <section class="section gallery-section" id="experiencia"><div class="container"><div class="gallery-heading" data-reveal><div><span class="eyebrow">UMA EXPERIÊNCIA PARA SENTIR</span><h2>Tradição em cada <span>detalhe.</span></h2><p>Inspiração visual da culinária e dos espaços de convivência.</p></div><a href="#cardapio" class="text-action">Descubra os sabores →</a></div>
-      <div class="editorial-gallery" data-reveal><figure class="gallery-tall"><img loading="lazy" src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Prato com carnes e acompanhamentos, imagem ilustrativa"><figcaption><span>01 / SABORES</span><strong>Compartilhar é tradição</strong></figcaption></figure><figure><img loading="lazy" src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&amp;fit=crop&amp;w=850&amp;q=85" alt="Ambiente de restaurante acolhedor, imagem ilustrativa"><figcaption><span>02 / AMBIENTE</span><strong>Um lugar para estar</strong></figcaption></figure><figure><img loading="lazy" src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&amp;fit=crop&amp;w=850&amp;q=85" alt="Interior de restaurante, imagem ilustrativa"><figcaption><span>03 / EXPERIÊNCIA</span><strong>Momentos especiais</strong></figcaption></figure></div><p class="image-credit">Fotografias ilustrativas via Unsplash; não representam estabelecimento real.</p></div></section>
+      <div class="editorial-gallery" data-reveal><figure class="gallery-tall"><img loading="lazy" src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Prato com carnes e acompanhamentos, imagem ilustrativa"><figcaption><span>01 / SABORES</span><strong>Compartilhar é tradição</strong></figcaption></figure><figure><img loading="lazy" src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&amp;fit=crop&amp;w=850&amp;q=85" alt="Ambiente de restaurante acolhedor, imagem ilustrativa"><figcaption><span>02 / AMBIENTE</span><strong>Um lugar para estar</strong></figcaption></figure><figure><img loading="lazy" src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&amp;fit=crop&amp;w=850&amp;q=85" alt="Interior de restaurante, imagem ilustrativa"><figcaption><span>03 / EXPERIÊNCIA</span><strong>Momentos especiais</strong></figcaption></figure></div></div></section>
 
     <section class="section menu-section" id="cardapio">
       <div class="container" data-reveal>
-        <div class="section-top"><div class="section-heading"><span class="eyebrow">Sabores da HANOK</span><h2>Nosso <span>cardápio</span></h2><p>Itens e preços de exemplo, editáveis no painel administrativo local.</p></div><button class="button button-outline" id="open-cart-menu" type="button">Ver meu pedido <span id="cart-count-menu">(0)</span></button></div>
+        <div class="section-top"><div class="section-heading"><span class="eyebrow">Sabores da HANOK</span><h2>Nosso <span>cardápio</span></h2><p>Explore nossa seleção de pratos, ingredientes e combinações especiais.</p></div><button class="button button-outline" id="open-cart-menu" type="button">Ver meu pedido <span id="cart-count-menu">(0)</span></button></div>
         <div class="menu-tools"><div class="menu-filters" role="group" aria-label="Filtrar por categoria"><button class="filter-button active" data-category="todos" type="button" aria-pressed="true">Todos</button><button class="filter-button" data-category="entradas" type="button" aria-pressed="false">Entradas</button><button class="filter-button" data-category="pratos" type="button" aria-pressed="false">Pratos</button><button class="filter-button" data-category="bebidas" type="button" aria-pressed="false">Bebidas</button></div><label class="search-field"><span class="sr-only">Pesquisar pratos</span><input type="search" id="menu-search" placeholder="Buscar no cardápio…" autocomplete="off"></label></div>
         <div class="menu-grid" id="menu-grid" aria-live="polite"></div>
-        <p class="muted disclaimer">* Produtos, descrições e preços ilustrativos. Consulte as informações de um restaurante real antes de comprar.</p>
       </div>
     </section>
 
     <section class="section reservation-section" id="reserva">
       <div class="container reservation-grid" data-reveal>
-        <div class="reservation-intro"><span class="eyebrow">Atendimento</span><h2>Planeje sua visita <span>à HANOK</span></h2><p>Preencha os dados para simular uma solicitação de reserva. Entre na sua conta para registrar uma solicitação fictícia neste navegador.</p><div class="info-note"><strong>Funcionalidade de demonstração</strong><p>Não há consulta de disponibilidade, confirmação real ou envio de mensagens. Evite inserir dados pessoais reais nos testes.</p></div></div>
+        <div class="reservation-intro"><span class="eyebrow">Atendimento</span><h2>Planeje sua visita <span>à HANOK</span></h2><p>Escolha o melhor dia e horário para sua experiência. Entre na sua conta para acompanhar sua solicitação.</p><div class="reservation-feature"><span aria-hidden="true">✦</span><div><strong>Momentos para compartilhar</strong><p>Uma mesa, bons sabores e novas histórias.</p></div></div></div>
         <form class="form-card" id="reservation-form">
           <h3>Solicitação de reserva</h3>
-          <div class="form-row"><label>Nome para identificação <input name="customer" type="text" maxlength="70" autocomplete="off" placeholder="Ex.: Cliente teste" required></label><label>Quantidade de pessoas <select name="guests" required><option value="1">1 pessoa</option><option value="2" selected>2 pessoas</option><option value="3">3 pessoas</option><option value="4">4 pessoas</option><option value="5">5 pessoas</option><option value="6">6 pessoas</option><option value="7">7 pessoas</option><option value="8">8 pessoas</option></select></label></div>
+          <div class="form-row"><label>Nome para identificação <input name="customer" type="text" maxlength="70" autocomplete="off" placeholder="Como podemos chamar você?" required></label><label>Quantidade de pessoas <select name="guests" required><option value="1">1 pessoa</option><option value="2" selected>2 pessoas</option><option value="3">3 pessoas</option><option value="4">4 pessoas</option><option value="5">5 pessoas</option><option value="6">6 pessoas</option><option value="7">7 pessoas</option><option value="8">8 pessoas</option></select></label></div>
           <div class="form-row"><label>Data <input name="date" id="reservation-date" type="date" required></label><label>Horário <select name="time" id="reservation-time" required><option value="">Selecione uma data</option></select></label></div>
-          <label>Observações (opcional) <textarea name="notes" rows="3" maxlength="180" placeholder="Ex.: Evento de demonstração"></textarea></label>
-          <button class="button button-primary button-wide" type="submit">Salvar solicitação de demonstração</button>
-          <p id="reservation-feedback" class="form-feedback" role="status" aria-live="polite"></p>
+          <label>Observações (opcional) <textarea name="notes" rows="3" maxlength="180" placeholder="Ex.: Aniversário ou ocasião especial"></textarea></label>
+          <button class="button button-primary button-wide" type="submit">Solicitar reserva</button>
+          <p class="form-disclosure">Os dados são salvos neste navegador; a reserva não é enviada ao restaurante.</p><p id="reservation-feedback" class="form-feedback" role="status" aria-live="polite"></p>
         </form>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer"><div class="container footer-grid"><div><div class="footer-brand">HANOK <span>한옥</span></div><p>Sabor e tradição em equilíbrio.</p><p class="muted">Projeto de demonstração. Sem estabelecimento, endereço ou contato comercial verificados.</p></div><div><h3>Explorar</h3><a href="#cardapio">Cardápio</a><a href="#reserva">Reservas</a><a href="identidade.html">Identidade visual</a></div><div><h3>Protótipo</h3><a href="login.html">Login e cadastro</a><a href="minha-conta.html">Minha conta</a><a href="admin.html" data-admin-link hidden>Painel administrativo</a><p class="muted">Contas e acesso simulados. Sem backend ou pagamentos reais.</p></div></div><div class="container footer-bottom">© 2026 HANOK — Protótipo de interface.</div></footer>
+  <footer class="site-footer"><div class="container footer-grid"><div><div class="footer-brand">HANOK <span>한옥</span></div><p>Sabor e tradição em equilíbrio.</p><p class="muted">Inspirada na culinária coreana e no prazer de estar à mesa.</p></div><div><h3>Explorar</h3><a href="#cardapio">Cardápio</a><a href="#reserva">Reservas</a><a href="identidade.html">Identidade visual</a></div><div><h3>Minha HANOK</h3><a href="login.html">Login e cadastro</a><a href="minha-conta.html">Minha conta</a><a href="admin.html" data-admin-link hidden>Painel administrativo</a></div></div><div class="container footer-bottom">© 2026 HANOK — Sabor e tradição em equilíbrio.</div></footer>
 
-  <dialog id="cart-dialog" class="cart-dialog" aria-labelledby="cart-title"><div class="dialog-heading"><div><span class="eyebrow">Protótipo de pedido</span><h2 id="cart-title">Meu pedido</h2></div><button class="icon-button close-dialog" type="button" id="close-cart" aria-label="Fechar pedido">✕</button></div><div class="dialog-scroll"><div id="cart-items" class="cart-items"></div><div class="cart-total"><span>Total ilustrativo</span><strong id="cart-total">R$ 0,00</strong></div><form id="order-form" class="order-form"><label>Identificação do cliente <input type="text" name="customer" maxlength="70" placeholder="Ex.: Cliente teste" autocomplete="off" required></label><label>Tipo de atendimento <select name="fulfillment" id="order-fulfillment"><option value="retirada">Retirada</option><option value="entrega">Entrega</option></select></label><label id="delivery-field" hidden>Endereço de exemplo <textarea name="address" rows="2" maxlength="160" placeholder="Use dados fictícios"></textarea></label><div class="info-note compact">Pagamento não integrado. Este pedido não será enviado ao restaurante.</div><button type="submit" class="button button-primary button-wide">Salvar pedido de demonstração</button><p class="form-feedback" id="order-feedback" role="status" aria-live="polite"></p></form></div></dialog>
+  <dialog id="cart-dialog" class="cart-dialog" aria-labelledby="cart-title"><div class="dialog-heading"><div><span class="eyebrow">SUA ESCOLHA</span><h2 id="cart-title">Meu pedido</h2></div><button class="icon-button close-dialog" type="button" id="close-cart" aria-label="Fechar pedido">✕</button></div><div class="dialog-scroll"><div id="cart-items" class="cart-items"></div><div class="cart-total"><span>Total do pedido</span><strong id="cart-total">R$ 0,00</strong></div><form id="order-form" class="order-form"><label>Identificação do cliente <input type="text" name="customer" maxlength="70" placeholder="Como podemos chamar você?" autocomplete="off" required></label><label>Tipo de atendimento <select name="fulfillment" id="order-fulfillment"><option value="retirada">Retirada</option><option value="entrega">Entrega</option></select></label><label id="delivery-field" hidden>Endereço para entrega <textarea name="address" rows="2" maxlength="160" placeholder="Informe o local para entrega"></textarea></label><p class="form-disclosure">Seus pedidos ficam salvos neste navegador e não são enviados ao restaurante.</p><button type="submit" class="button button-primary button-wide">Salvar pedido</button><p class="form-feedback" id="order-feedback" role="status" aria-live="polite"></p></form></div></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="global-notices" class="notice-stack" aria-live="polite"></div>
 </body>
