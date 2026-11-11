@@ -1,22 +1,68 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101013">
-  <meta name="robots" content="noindex,nofollow"><title>HANOK | Administração de demonstração</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css"><script src="js/shared.js" defer></script><script src="js/admin.js" defer></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101013"><meta name="robots" content="noindex,nofollow">
+  <title>HANOK Studio | Painel administrativo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css"><link rel="stylesheet" href="css/modern.css">
+  <script src="js/theme.js" defer></script><script src="js/shared.js" defer></script><script src="js/auth.js" defer></script><script src="js/ui.js" defer></script><script src="js/admin.js" defer></script>
 </head>
-<body class="admin-page">
+<body class="dashboard-body protected-page">
   <a class="skip-link" href="#conteudo">Ir para conteúdo</a>
-  <header class="site-header"><div class="container header-inner"><a class="brand" href="index.html"><span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 100 66" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 26 Q50 1 92 26" stroke="white" stroke-width="7"/><path d="M14 33 Q50 13 86 33" stroke-width="6"/><path d="M22 36V54 M50 28V54 M78 36V54" stroke-width="5"/><path d="M12 54H88" stroke-width="6"/></svg></span><span class="brand-wordmark"><strong>HANOK <small>한옥</small></strong><span>Painel de demonstração</span></span></a><a class="button button-outline button-small" href="index.html">← Voltar ao site</a></div></header>
-  <main class="container admin-main" id="conteudo"><div class="admin-alert"><strong>Área administrativa de demonstração — NÃO usar em produção.</strong> Não há login ou controle de acesso. Dados são salvos somente neste navegador, em localStorage. A implementação real exige backend, autenticação e MySQL.</div>
-    <div class="section-heading admin-title"><span class="eyebrow">Área administrativa</span><h1>Gestão <span>HANOK</span></h1><p>CRUD de cardápio, acompanhamento de pedidos e reservas simulados.</p></div>
-    <section class="stats-grid" aria-label="Resumo"><article class="stat-card"><span>Produtos no cardápio</span><strong id="stat-products">0</strong></article><article class="stat-card"><span>Pedidos de demonstração</span><strong id="stat-orders">0</strong></article><article class="stat-card"><span>Reservas de demonstração</span><strong id="stat-reservations">0</strong></article></section>
-    <div class="admin-tabs" role="group" aria-label="Seções de administração"><button type="button" data-panel="products-panel" class="admin-tab active" aria-pressed="true">Cardápio / CRUD</button><button type="button" data-panel="orders-panel" class="admin-tab" aria-pressed="false">Pedidos</button><button type="button" data-panel="reservations-panel" class="admin-tab" aria-pressed="false">Reservas</button></div>
-    <section id="products-panel" class="admin-panel" aria-labelledby="products-heading"><div class="section-top"><div><h2 id="products-heading">Gerenciar produtos</h2><p class="muted">Alterações são refletidas no site quando ele for atualizado.</p></div><button id="reset-products" type="button" class="button button-outline button-small">Restaurar exemplos</button></div><div class="admin-columns"><form id="product-form" class="form-card"><h3 id="product-form-title">Adicionar produto</h3><input type="hidden" name="id"><label>Nome <input type="text" name="name" maxlength="75" required placeholder="Ex.: Japchae"></label><label>Descrição <textarea name="description" maxlength="240" rows="3" required></textarea></label><div class="form-row"><label>Categoria <select name="category" required><option value="entradas">Entradas</option><option value="pratos">Pratos</option><option value="bebidas">Bebidas</option></select></label><label>Preço (R$) <input name="price" type="number" step="0.01" min="0.01" max="99999" required placeholder="0,00"></label></div><label>URL HTTPS da imagem (opcional) <input type="url" name="image" maxlength="400" placeholder="https://exemplo.com/imagem.jpg"></label><div class="form-actions"><button class="button button-primary" type="submit" id="save-product">Adicionar produto</button><button class="button button-outline" type="button" id="cancel-edit" hidden>Cancelar edição</button></div><p id="product-feedback" role="status" aria-live="polite" class="form-feedback"></p></form><div class="admin-data-card"><h3>Produtos cadastrados</h3><div id="products-list" class="admin-list" aria-live="polite"></div></div></div></section>
-    <section id="orders-panel" class="admin-panel" aria-labelledby="orders-heading" hidden><div class="section-top"><div><h2 id="orders-heading">Pedidos registrados</h2><p class="muted">Somente pedidos simulados feitos neste navegador.</p></div></div><div id="orders-list" class="admin-list" aria-live="polite"></div></section>
-    <section id="reservations-panel" class="admin-panel" aria-labelledby="reservations-heading" hidden><div class="section-top"><div><h2 id="reservations-heading">Solicitações de reserva</h2><p class="muted">Não representam reservas confirmadas nem disponibilidade real.</p></div></div><div id="reservations-list" class="admin-list" aria-live="polite"></div></section>
-  </main>
-  <footer class="site-footer"><div class="container footer-bottom">HANOK — Ambiente de demonstração, sem autenticação e sem backend.</div></footer>
+  <div class="dashboard-shell">
+    <aside class="dashboard-sidebar" id="admin-sidebar" aria-label="Menu administrativo">
+      <a href="index.html" class="admin-brand" data-page-transition><span class="admin-brand-mark">⌂</span><span><strong>HANOK</strong><small>STUDIO · ADMIN</small></span></a>
+      <div class="side-caption">GERENCIAMENTO</div>
+      <nav class="side-links" aria-label="Seções do painel">
+        <button type="button" data-view="overview" class="side-link active" aria-current="page"><span class="side-ico">▦</span> Visão geral</button>
+        <button type="button" data-view="products" class="side-link"><span class="side-ico">◫</span> Cardápio</button>
+        <button type="button" data-view="orders" class="side-link"><span class="side-ico">▤</span> Pedidos <span class="side-count" id="sidebar-orders">0</span></button>
+        <button type="button" data-view="reservations" class="side-link"><span class="side-ico">▣</span> Reservas</button>
+        <button type="button" data-view="users" class="side-link"><span class="side-ico">♙</span> Usuários e acessos</button>
+      </nav>
+      <div class="side-caption">PREFERÊNCIAS</div>
+      <nav class="side-links" aria-label="Preferências">
+        <button type="button" data-view="settings" class="side-link"><span class="side-ico">⚙</span> Configurações</button>
+        <a href="index.html" class="side-link" data-page-transition><span class="side-ico">↗</span> Visitar site</a>
+        <a href="identidade.html" class="side-link" data-page-transition><span class="side-ico">◈</span> Identidade visual</a>
+      </nav>
+      <div class="sidebar-bottom"><div class="side-demo-tag">● Ambiente de demonstração</div><button type="button" class="side-link logout-link" id="admin-logout"><span class="side-ico">⇥</span> Sair da conta</button></div>
+    </aside>
+    <div class="dashboard-workspace">
+      <header class="dashboard-topbar">
+        <button id="sidebar-toggle" type="button" class="top-icon mobile-sidebar-trigger" aria-label="Abrir menu" aria-expanded="false">☰</button>
+        <div class="dashboard-breadcrumb">HANOK <span>/</span> <strong id="breadcrumb-current">Visão geral</strong></div>
+        <label class="admin-top-search"><span aria-hidden="true">⌕</span><input id="admin-search" type="search" placeholder="Pesquisar nesta seção..." aria-label="Pesquisar registros"></label>
+        <button type="button" data-theme-toggle class="top-icon" aria-label="Alterar tema"><span data-theme-icon>☾</span></button>
+        <div class="admin-top-user"><span class="avatar avatar-admin">A</span><span><strong id="admin-name">Admin</strong><small>Administrador</small></span></div>
+      </header>
+      <main id="conteudo" class="dashboard-content">
+        <div class="prototype-warning"><strong>DEMONSTRAÇÃO LOCAL</strong><span>Contas, perfis e registros são simulados neste navegador. Sem servidor, MySQL ou autorização real.</span></div>
+        <div class="dashboard-heading"><div><span class="eyebrow">HANOK • CENTRAL DE CONTROLE</span><h1 id="view-title">Visão geral</h1><p id="view-description">Acompanhe as operações do protótipo em um só lugar.</p></div><div class="heading-actions"><span class="today-chip" id="today-chip"></span><button type="button" class="button button-primary button-small" id="main-cta">+ Novo produto</button></div></div>
+        <section class="dashboard-view active" data-page="overview" aria-label="Visão geral">
+          <div class="dashboard-metrics">
+            <article class="metric-tile"><div><span>Produtos no cardápio</span><strong id="stat-products">0</strong><small>Itens disponíveis</small></div><span class="metric-icon">◫</span></article>
+            <article class="metric-tile"><div><span>Pedidos registrados</span><strong id="stat-orders">0</strong><small>Simulados neste dispositivo</small></div><span class="metric-icon">▤</span></article>
+            <article class="metric-tile"><div><span>Reservas solicitadas</span><strong id="stat-reservations">0</strong><small>Aguardando gerenciamento</small></div><span class="metric-icon">◷</span></article>
+            <article class="metric-tile"><div><span>Contas cadastradas</span><strong id="stat-users">0</strong><small>Clientes e administradores</small></div><span class="metric-icon">♙</span></article>
+          </div>
+          <div class="dashboard-two-col"><section class="dash-card"><div class="dash-card-heading"><div><h2>Últimos pedidos</h2><p>Atualizações recentes</p></div><button class="text-action" type="button" data-jump="orders">Ver todos →</button></div><div id="recent-orders" class="record-stack"></div></section><section class="dash-card"><div class="dash-card-heading"><div><h2>Próximas reservas</h2><p>Solicitações registradas</p></div><button class="text-action" type="button" data-jump="reservations">Ver todas →</button></div><div id="recent-reservations" class="record-stack"></div></section></div>
+          <section class="dash-feature"><div class="dash-feature-copy"><span class="eyebrow">FEITO PARA O SEU NEGÓCIO</span><h2>O cuidado da HANOK, em cada detalhe.</h2><p>Gerencie produtos, atendimentos e perfis com uma experiência centralizada.</p></div><img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=950&q=80" alt="Prato ilustrativo de gastronomia" loading="lazy"></section>
+        </section>
+        <section class="dashboard-view" data-page="products" aria-label="Gerenciamento de cardápio" hidden>
+          <div class="panel-heading"><div><h2>Itens do cardápio</h2><p>Crie, edite e exclua produtos ilustrativos.</p></div><button id="reset-products" type="button" class="button button-outline button-small">Restaurar exemplos</button></div>
+          <div class="dashboard-two-col product-admin-layout"><form id="product-form" class="dash-card input-card"><h3 id="product-form-title">Adicionar produto</h3><input type="hidden" name="id"><label>Nome do produto<input type="text" name="name" maxlength="75" minlength="2" required placeholder="Ex.: Japchae"></label><label>Descrição<textarea name="description" maxlength="240" rows="3" minlength="5" required placeholder="Descreva os ingredientes..."></textarea></label><div class="form-row"><label>Categoria<select name="category" required><option value="entradas">Entradas</option><option value="pratos">Pratos</option><option value="bebidas">Bebidas</option></select></label><label>Preço (R$)<input name="price" type="number" step="0.01" min="0.01" max="99999" required placeholder="0,00"></label></div><label>Imagem (URL HTTPS)<input type="url" name="image" maxlength="400" placeholder="https://images.unsplash.com/..."></label><div class="form-actions"><button class="button button-primary" type="submit" id="save-product">Adicionar produto</button><button class="button button-outline" type="button" id="cancel-edit" hidden>Cancelar</button></div><p id="product-feedback" role="status" aria-live="polite" class="form-feedback"></p></form><div class="dash-card"><div class="dash-card-heading"><h3>Produtos cadastrados</h3><span class="count-pill" id="product-count">0 itens</span></div><div id="products-list" class="record-stack" aria-live="polite"></div></div></div>
+        </section>
+        <section class="dashboard-view" data-page="orders" aria-label="Pedidos" hidden><div class="panel-heading"><div><h2>Gerenciar pedidos</h2><p>Acompanhe os estágios do preparo. Todos os pedidos são simulações locais.</p></div></div><div class="dash-card"><div id="orders-list" class="record-stack" aria-live="polite"></div></div></section>
+        <section class="dashboard-view" data-page="reservations" aria-label="Reservas" hidden><div class="panel-heading"><div><h2>Controle de reservas</h2><p>Altere o status de solicitações feitas no protótipo.</p></div></div><div class="dash-card"><div id="reservations-list" class="record-stack" aria-live="polite"></div></div></section>
+        <section class="dashboard-view" data-page="users" aria-label="Usuários e acessos" hidden>
+          <div class="panel-heading"><div><h2>Usuários cadastrados</h2><p>Gerencie perfis <strong>cliente</strong> e <strong>administrador</strong> — somente neste dispositivo.</p></div><span class="count-pill" id="user-count">0 usuários</span></div>
+          <div class="dash-card table-panel"><div class="table-scroll"><table class="users-table"><thead><tr><th>Usuário</th><th>Perfil</th><th>Status</th><th>Cadastro</th><th>Gerenciar acesso</th></tr></thead><tbody id="users-tbody"></tbody></table></div><div id="users-empty" class="empty-state" hidden>Nenhum usuário encontrado.</div></div>
+        </section>
+        <section class="dashboard-view" data-page="settings" aria-label="Configurações" hidden><div class="dashboard-two-col"><section class="dash-card"><h2>Experiência visual</h2><p>Defina a aparência do site e do painel. A preferência é mantida no navegador.</p><div class="settings-option"><span><strong>Modo claro ou escuro</strong><small>Alterne quando quiser</small></span><button type="button" data-theme-toggle class="button button-outline button-small">Alternar tema <span data-theme-icon>☾</span></button></div><div class="settings-option"><span><strong>Área do cliente</strong><small>Pedidos e reservas da sua conta</small></span><a class="text-action" href="minha-conta.html">Minha conta →</a></div></section><section class="dash-card"><h2>Sobre esta demonstração</h2><p>Os dados residem no localStorage e a sessão no sessionStorage. Qualquer pessoa com acesso ao navegador pode inspecioná-los ou alterá-los. A autorização é somente visual, não protege uma API real.</p><div class="info-note compact"><strong>Para produção</strong><p>Implementar autenticação, autorização no servidor, banco MySQL, monitoramento, rate limit e política de privacidade.</p></div></section></div></section>
+      </main>
+    </div>
+  </div>
+  <div id="global-notices" class="notice-stack" aria-live="polite"></div>
 </body>
 </html>

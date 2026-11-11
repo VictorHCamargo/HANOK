@@ -4,7 +4,12 @@
   const D = window.HanokData;
   if (!D) return;
   const $ = id => document.getElementById(id);
-  const cart = new Map();
+  const A=window.HanokAuth,UI=window.HanokUI;
+  const CART_KEY='hanok:cart:tab';
+  let initial=[];try{initial=JSON.parse(sessionStorage.getItem(CART_KEY)||'[]');}catch{}
+  const cart = new Map(Array.isArray(initial)?initial.filter(x=>Array.isArray(x)&&typeof x[0]==='string'&&Number.isInteger(x[1])&&x[1]>0&&x[1]<=99):[]);
+  const persistCart=()=>{try{sessionStorage.setItem(CART_KEY,JSON.stringify([...cart]));}catch{}};
+  const requestLogin=()=>{UI?.toast('Entre ou crie uma conta para concluir.','info');const target='login.html?next='+encodeURIComponent('index.html#cardapio');setTimeout(()=>location.assign(target),550);};
   // Fallback visual quando a foto remota do destaque não estiver disponível.
   const heroImage=document.querySelector('.hero-picture > img');
   if(heroImage){
@@ -35,7 +40,7 @@
   }
   function addToCart(id){
     const product=D.getProducts().find(p=>p.id===id);if(!product)return notify('Produto não encontrado.');
-    cart.set(id,Math.min(99,(cart.get(id)||0)+1));renderCart();notify(`${product.name} adicionado ao pedido.`);
+    cart.set(id,Math.min(99,(cart.get(id)||0)+1));persistCart();renderCart();notify(`${product.name} adicionado ao pedido.`);
   }
   function makeProductCard(p){
     const article=D.element('article','product-card');
@@ -72,7 +77,7 @@
   }
   function changeQuantity(id,delta){
     const next=(cart.get(id)||0)+delta;
-    if(next<=0)cart.delete(id);else cart.set(id,Math.min(99,next));renderCart();
+    if(next<=0)cart.delete(id);else cart.set(id,Math.min(99,next));persistCart();renderCart();
   }
   function renderCart(){
     const entries=cartEntries();items.replaceChildren();let total=0,count=0;
@@ -96,11 +101,12 @@
   orderForm.addEventListener('submit',event=>{
     event.preventDefault();const feedback=$('order-feedback'),entries=cartEntries();
     if(!entries.length){feedback.textContent='Adicione um produto antes de continuar.';feedback.classList.add('error');return;}
+    if(!A?.current()){feedback.classList.add('error');feedback.textContent='Faça login para salvar o pedido de demonstração.';requestLogin();return;}
     const form=new FormData(orderForm);const customer=String(form.get('customer')||'').trim();const method=String(form.get('fulfillment')||'');const address=String(form.get('address')||'').trim();
     if(!customer||(method==='entrega'&&!address)){feedback.textContent='Preencha os campos obrigatórios.';feedback.classList.add('error');return;}
-    const order={id:D.id(),customer,fulfillment:method,address:method==='entrega'?address:'',items:entries.map(({p,quantity})=>({productId:p.id,name:p.name,unitPrice:p.price,quantity})),total:Math.round(entries.reduce((sum,{p,quantity})=>sum+p.price*quantity,0)*100)/100,status:'Recebido',createdAt:new Date().toISOString()};
+    const order={id:D.id(),userId:A.current().id,customer,fulfillment:method,address:method==='entrega'?address:'',items:entries.map(({p,quantity})=>({productId:p.id,name:p.name,unitPrice:p.price,quantity})),total:Math.round(entries.reduce((sum,{p,quantity})=>sum+p.price*quantity,0)*100)/100,status:'Recebido',createdAt:new Date().toISOString()};
     if(!D.saveOrder(order)){feedback.textContent='Não foi possível salvar: armazenamento do navegador indisponível.';feedback.classList.add('error');return;}
-    cart.clear();renderCart();orderForm.reset();deliveryField.hidden=true;deliveryAddress.required=false;
+    cart.clear();persistCart();renderCart();orderForm.reset();deliveryField.hidden=true;deliveryAddress.required=false;
     feedback.classList.remove('error');feedback.textContent='Pedido de demonstração salvo somente neste navegador. Nenhum pedido foi enviado ou pago.';
   });
 
@@ -129,10 +135,12 @@
     event.preventDefault();const form=new FormData(reservationForm),feedback=$('reservation-feedback');
     const date=String(form.get('date')||''),time=String(form.get('time')||''),customer=String(form.get('customer')||'').trim(),guests=Number(form.get('guests'));
     if(!customer||!availableTimes(date).includes(time)||!Number.isInteger(guests)||guests<1||guests>8){feedback.classList.add('error');feedback.textContent='Confira a data, o horário e os demais dados.';return;}
-    const reservation={id:D.id(),customer,date,time,guests,notes:String(form.get('notes')||'').trim(),status:'Pendente',createdAt:new Date().toISOString()};
+    if(!A?.current()){feedback.classList.add('error');feedback.textContent='Entre na sua conta para solicitar uma reserva.';requestLogin();return;}
+    const reservation={id:D.id(),userId:A.current().id,customer,date,time,guests,notes:String(form.get('notes')||'').trim(),status:'Pendente',createdAt:new Date().toISOString()};
     if(!D.saveReservation(reservation)){feedback.classList.add('error');feedback.textContent='Não foi possível salvar: armazenamento do navegador indisponível.';return;}
     reservationForm.reset();updateTimes();feedback.classList.remove('error');feedback.textContent='Solicitação de demonstração salva neste navegador. Nenhuma reserva foi enviada ou confirmada.';
   });
   window.addEventListener('storage',()=>{renderMenu();renderCart();});
   renderMenu();renderCart();
+  const known=A?.current();if(known){const orderName=orderForm.elements.namedItem('customer'),reservationName=reservationForm.elements.namedItem('customer');if(orderName)orderName.value=known.name;if(reservationName)reservationName.value=known.name;}
 })();

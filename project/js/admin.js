@@ -1,91 +1,106 @@
-/* Painel administrativo local: CRUD + listagem e mudança de status de pedidos e reservas. */
+/* HANOK Studio: painel de demonstração. Só exibe dados a usuários admin logados. */
 (() => {
-  'use strict';
-  const D=window.HanokData;
-  if(!D)return;
-  const $=id=>document.getElementById(id);
-  const form=$('product-form');
-  const field=name=>form.elements.namedItem(name);
-  function formatInstant(date){const d=new Date(date);return Number.isNaN(d.getTime())?'Data não disponível':d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});}
-  function empty(text){return D.element('div','admin-empty',text);}
-  function action(label,css,handler){const b=D.element('button','small-action '+css,label);b.type='button';b.addEventListener('click',handler);return b;}
-  function refreshStats(){$('stat-products').textContent=D.getProducts().length;$('stat-orders').textContent=D.getOrders().length;$('stat-reservations').textContent=D.getReservations().length;}
-  function resetProductForm(){form.reset();field('id').value='';$('product-form-title').textContent='Adicionar produto';$('save-product').textContent='Adicionar produto';$('cancel-edit').hidden=true;$('product-feedback').textContent='';}
-  function startEdit(id){
-    const product=D.getProducts().find(p=>p.id===id);if(!product)return;
-    Object.keys(product).forEach(key=>{const input=field(key);if(input)input.value=product[key];});
-    $('product-form-title').textContent='Editar produto';$('save-product').textContent='Salvar alterações';$('cancel-edit').hidden=false;
-    form.scrollIntoView({behavior:'smooth',block:'start'});field('name').focus({preventScroll:true});
-  }
-  function deleteProduct(id){
-    const product=D.getProducts().find(p=>p.id===id);if(!product||!confirm(`Excluir "${product.name}" do cardápio de demonstração?`))return;
-    const saved=D.saveProducts(D.getProducts().filter(p=>p.id!==id));
-    if(!saved){alert('Não foi possível salvar. Verifique o armazenamento do navegador.');return;}
-    if(field('id').value===id)resetProductForm();renderAll();
-  }
-  function renderProducts(){
-    const list=$('products-list'),products=D.getProducts();list.replaceChildren();
-    if(!products.length){list.append(empty('Nenhum produto cadastrado.'));return;}
-    for(const p of products){
-      const item=D.element('article','admin-item'),info=D.element('div','admin-item-main'),actions=D.element('div','admin-item-actions');
-      info.append(D.element('strong','',p.name),D.element('p','',p.description),D.element('div','meta',`${D.CATEGORIES[p.category]} · ${D.money(p.price)}`));
-      actions.append(action('Editar','',()=>startEdit(p.id)),action('Excluir','danger',()=>deleteProduct(p.id)));item.append(info,actions);list.append(item);
-    }
-  }
-  form.addEventListener('submit',event=>{
-    event.preventDefault();const feedback=$('product-feedback');feedback.classList.remove('error');
-    const current=D.getProducts();const product={id:field('id').value||D.id(),name:field('name').value.trim(),description:field('description').value.trim(),category:field('category').value,price:Number(field('price').value),image:field('image').value.trim()};
-    if(!product.name||!product.description||!D.CATEGORIES[product.category]||!Number.isFinite(product.price)||product.price<.01||product.price>99999){feedback.textContent='Preencha todos os campos obrigatórios com valores válidos.';feedback.classList.add('error');return;}
-    if(product.image&&!D.safeImage(product.image)){feedback.textContent='A URL da imagem deve começar com https:// e ser válida.';feedback.classList.add('error');return;}
-    const index=current.findIndex(p=>p.id===product.id);
-    if(index>=0)current[index]=product;else current.push(product);
-    if(!D.saveProducts(current)){feedback.textContent='Não foi possível salvar. Verifique o armazenamento local.';feedback.classList.add('error');return;}
-    resetProductForm();renderAll();$('product-feedback').textContent='Produto salvo no cardápio local de demonstração.';
-  });
-  $('cancel-edit').addEventListener('click',resetProductForm);
-  $('reset-products').addEventListener('click',()=>{
-    if(!confirm('Restaurar os produtos de exemplo? Os itens personalizados serão substituídos.'))return;
-    if(!D.saveProducts(D.DEFAULT_PRODUCTS)){alert('Falha ao salvar os produtos.');return;}
-    resetProductForm();renderAll();
-  });
-  function makeStatusSelect(current,options,onChange){
-    const select=D.element('select','status-select');select.setAttribute('aria-label','Alterar status');
-    for(const status of options){const opt=D.element('option','',status);opt.value=status;select.append(opt);}
-    select.value=options.includes(current)?current:options[0];
-    select.addEventListener('change',()=>onChange(select.value));return select;
-  }
-  function changeStatus(type,id,status){
-    const isOrder=type==='order';const current=isOrder?D.getOrders():D.getReservations();const item=current.find(i=>i.id===id);
-    if(!item)return;
-    item.status=status;
-    const saved=isOrder?D.saveOrders(current):D.saveReservations(current);
-    if(!saved){alert('Não foi possível atualizar o status.');renderAll();return;}
-    renderAll();
-  }
-  function renderOrders(){
-    const list=$('orders-list');list.replaceChildren();const orders=D.getOrders();if(!orders.length){list.append(empty('Nenhum pedido de demonstração foi criado.'));return;}
-    for(const order of orders){
-      const item=D.element('article','admin-item'),info=D.element('div','admin-item-main'),actions=D.element('div','admin-item-actions');
-      const lines=Array.isArray(order.items)?order.items.map(i=>`${Number(i.quantity)||0}× ${String(i.name||'Produto')}`).join(', '):'Sem itens';
-      info.append(D.element('strong','',`${order.customer||'Cliente'} • ${D.money(order.total)}`),D.element('p','',`${order.fulfillment==='entrega'?'Entrega':'Retirada'} · ${formatInstant(order.createdAt)}`),D.element('p','',lines));
-      if(order.fulfillment==='entrega'&&order.address)info.append(D.element('p','',`Endereço de teste: ${order.address}`));
-      actions.append(makeStatusSelect(order.status,D.ORDER_STATUSES,status=>changeStatus('order',order.id,status)));item.append(info,actions);list.append(item);
-    }
-  }
-  function renderReservations(){
-    const list=$('reservations-list');list.replaceChildren();const reservations=D.getReservations();if(!reservations.length){list.append(empty('Nenhuma solicitação de reserva simulada foi criada.'));return;}
-    for(const reservation of reservations){
-      const item=D.element('article','admin-item'),info=D.element('div','admin-item-main'),actions=D.element('div','admin-item-actions');
-      info.append(D.element('strong','',`${reservation.customer||'Cliente'} • ${reservation.guests||'?'} pessoa(s)`),D.element('p','',`${D.formatDate(reservation.date)} às ${reservation.time||'—'}`));
-      if(reservation.notes)info.append(D.element('p','',`Observações: ${reservation.notes}`));
-      actions.append(makeStatusSelect(reservation.status,D.RESERVATION_STATUSES,status=>changeStatus('reservation',reservation.id,status)));item.append(info,actions);list.append(item);
-    }
-  }
-  function renderAll(){refreshStats();renderProducts();renderOrders();renderReservations();}
-  document.querySelectorAll('.admin-tab').forEach(tab=>tab.addEventListener('click',()=>{
-    document.querySelectorAll('.admin-tab').forEach(b=>{const active=b===tab;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
-    document.querySelectorAll('.admin-panel').forEach(panel=>{panel.hidden=panel.id!==tab.dataset.panel;});
-  }));
-  window.addEventListener('storage',renderAll);
-  renderAll();
+ 'use strict';
+ const D=window.HanokData,A=window.HanokAuth,UI=window.HanokUI;
+ if(!D||!A)return;
+ const user=A.requireRole('admin');if(!user)return;
+ document.body.classList.add('authorized');
+ const $=id=>document.getElementById(id);
+ const form=$('product-form'),field=n=>form.elements.namedItem(n);
+ const viewLabels={overview:['Visão geral','Acompanhe as operações do protótipo em um só lugar.'],products:['Cardápio','Organize os sabores e valores da HANOK.'],orders:['Pedidos','Acompanhe o preparo e a conclusão dos pedidos.'],reservations:['Reservas','Gerencie as solicitações de atendimento.'],users:['Usuários e acessos','Controle os perfis dos usuários cadastrados.'],settings:['Configurações','Personalize sua experiência de administração.']};
+ let view='overview',query='';
+ $('admin-name').textContent=user.name.split(' ')[0];
+ $('today-chip').textContent=new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'long',year:'numeric'}).format(new Date());
+ $('admin-logout').addEventListener('click',()=>A.logout());
+ function isVisible(text){return String(text||'').toLocaleLowerCase('pt-BR').includes(query);}
+ function el(tag,cls,text){return D.element(tag,cls,text);}
+ function action(label,classes,fn,title){const b=el('button','small-action '+classes,label);b.type='button';if(title)b.title=title;b.addEventListener('click',fn);return b;}
+ function feedback(message,error=false){const f=$('product-feedback');f.textContent=message;f.classList.toggle('error',error);UI?.toast(message,error?'error':'success');}
+ function empty(message){return el('div','admin-empty',message);}
+ function dateTime(value){const d=new Date(value);return Number.isNaN(d.getTime())?'Data não informada':new Intl.DateTimeFormat('pt-BR',{dateStyle:'short',timeStyle:'short'}).format(d);}
+ function pill(status){const x=el('span','status-pill status-'+String(status).toLowerCase().replace(/[^a-z0-9]/g,'-'),status);return x;}
+ function go(next){
+   if(!viewLabels[next])return;view=next;query='';$('admin-search').value='';
+   document.querySelectorAll('[data-page]').forEach(e=>{const active=e.dataset.page===next;e.hidden=!active;e.classList.toggle('active',active);});
+   document.querySelectorAll('[data-view]').forEach(b=>{const active=b.dataset.view===next;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+   $('breadcrumb-current').textContent=viewLabels[next][0];$('view-title').textContent=viewLabels[next][0];$('view-description').textContent=viewLabels[next][1];
+   $('main-cta').hidden=next!=='overview'&&next!=='products';
+   document.querySelector('.dashboard-shell').classList.remove('sidebar-open');$('sidebar-toggle').setAttribute('aria-expanded','false');
+   renderAll();window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});
+ }
+ document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.view)));
+ document.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.jump)));
+ $('main-cta').addEventListener('click',()=>{go('products');field('name').focus({preventScroll:true});});
+ $('sidebar-toggle').addEventListener('click',()=>{const open=document.querySelector('.dashboard-shell').classList.toggle('sidebar-open');$('sidebar-toggle').setAttribute('aria-expanded',String(open));});
+ $('admin-search').addEventListener('input',e=>{query=e.target.value.trim().toLocaleLowerCase('pt-BR');renderAll();});
+ function stats(){
+   $('stat-products').textContent=D.getProducts().length;$('stat-orders').textContent=D.getOrders().length;$('stat-reservations').textContent=D.getReservations().length;$('stat-users').textContent=A.userList().length;
+   $('sidebar-orders').textContent=D.getOrders().filter(o=>!['Concluído','Cancelado'].includes(o.status)).length;
+   $('product-count').textContent=D.getProducts().length+' itens';$('user-count').textContent=A.userList().length+' usuários';
+ }
+ function resetForm(){form.reset();field('id').value='';$('product-form-title').textContent='Adicionar produto';$('save-product').textContent='Adicionar produto';$('cancel-edit').hidden=true;$('product-feedback').textContent='';}
+ function editProduct(id){const product=D.getProducts().find(p=>p.id===id);if(!product)return;Object.keys(product).forEach(k=>{const input=field(k);if(input)input.value=product[k];});$('product-form-title').textContent='Editar produto';$('save-product').textContent='Salvar alterações';$('cancel-edit').hidden=false;form.scrollIntoView({block:'center',behavior:'smooth'});field('name').focus({preventScroll:true});}
+ function removeProduct(id){const p=D.getProducts().find(x=>x.id===id);if(!p||!confirm(`Deseja excluir “${p.name}”?`))return;const success=D.saveProducts(D.getProducts().filter(x=>x.id!==id));if(!success)return UI.toast('Não foi possível excluir: armazenamento cheio ou bloqueado.','error');if(field('id').value===id)resetForm();UI.toast('Produto excluído.','success');renderAll();}
+ function productRow(p){
+   const row=el('article','admin-product-row'),image=el('div','row-image'),info=el('div','row-information'),act=el('div','record-actions');
+   if(p.image){const img=document.createElement('img');img.loading='lazy';img.src=D.safeImage(p.image);img.alt='';img.addEventListener('error',()=>img.remove());image.append(img);}else image.textContent='◫';
+   info.append(el('strong','',p.name),el('p','',`${D.CATEGORIES[p.category]} · ${D.money(p.price)}`),el('small','',p.description));act.append(action('Editar','',()=>editProduct(p.id)),action('Excluir','danger',()=>removeProduct(p.id)));
+   row.append(image,info,act);return row;
+ }
+ function renderProducts(){const list=$('products-list');list.replaceChildren();const data=D.getProducts().filter(p=>isVisible(`${p.name} ${p.description} ${p.category}`));if(!data.length){list.append(empty('Nenhum produto corresponde à busca.'));return;}data.forEach(p=>list.append(productRow(p)));}
+ $('cancel-edit').addEventListener('click',resetForm);
+ form.addEventListener('submit',e=>{
+   e.preventDefault();if(!form.reportValidity())return;
+   const product={id:field('id').value||D.id(),name:field('name').value.trim().replace(/\s+/g,' '),description:field('description').value.trim(),category:field('category').value,price:Number(field('price').value),image:field('image').value.trim()};
+   if(product.name.length<2||product.description.length<5||!Object.hasOwn(D.CATEGORIES,product.category)||!Number.isFinite(product.price)||product.price<.01||product.price>99999){feedback('Revise nome, descrição, categoria e preço. Preencha valores válidos.',true);return;}
+   if(product.image&&!D.safeImage(product.image)){feedback('A imagem deve ter uma URL HTTPS válida.',true);return;}
+   const data=D.getProducts();const idx=data.findIndex(p=>p.id===product.id);if(idx>=0)data[idx]=product;else data.unshift(product);
+   if(!D.saveProducts(data)){feedback('Falha ao salvar. Verifique o armazenamento do navegador.',true);return;}
+   resetForm();feedback('Produto salvo com sucesso.');renderAll();
+ });
+ $('reset-products').addEventListener('click',()=>{if(!confirm('Substituir o cardápio atual pelos produtos de exemplo?'))return;if(!D.saveProducts(D.DEFAULT_PRODUCTS))return UI.toast('Falha ao restaurar os produtos.','error');resetForm();UI.toast('Produtos de exemplo restaurados.','success');renderAll();});
+ function statusControl(record,type){
+   const sel=el('select','status-select');sel.setAttribute('aria-label','Alterar status');const opts=type==='order'?D.ORDER_STATUSES:D.RESERVATION_STATUSES;
+   opts.forEach(s=>{const op=el('option','',s);op.value=s;sel.append(op);});sel.value=opts.includes(record.status)?record.status:opts[0];
+   sel.addEventListener('change',()=>{
+     const entries=type==='order'?D.getOrders():D.getReservations(),target=entries.find(x=>x.id===record.id);
+     if(!target)return;target.status=sel.value;const ok=type==='order'?D.saveOrders(entries):D.saveReservations(entries);
+     if(!ok){UI.toast('Não foi possível salvar o status.','error');renderAll();return;}
+     UI.toast('Status atualizado.','success');renderAll();
+   });return sel;
+ }
+ function recordRow(item,type,compact=false){
+   const row=el('article','record-row'),badge=el('div','record-avatar',type==='order'?'▤':'◷'),data=el('div','record-info'),right=el('div','record-right');
+   if(type==='order'){
+     const lines=Array.isArray(item.items)?item.items.map(i=>`${Number(i.quantity)||0}× ${String(i.name||'Item')}`).join(', '):'Sem itens';
+     data.append(el('strong','',`${item.customer||'Cliente'} · ${D.money(item.total)}`),el('small','',lines),el('small','',`${item.fulfillment==='entrega'?'Entrega':'Retirada'} • ${dateTime(item.createdAt)}`));
+     if(item.fulfillment==='entrega'&&item.address&&!compact)data.append(el('small','',`Endereço teste: ${item.address}`));
+   }else data.append(el('strong','',`${item.customer||'Cliente'} · ${item.guests||'?'} pessoa(s)`),el('small','',`${D.formatDate(item.date)} às ${item.time||'—'}`),el('small','',item.notes||'Sem observações'));
+   if(compact)right.append(pill(item.status));else right.append(pill(item.status),statusControl(item,type));row.append(badge,data,right);return row;
+ }
+ function renderRecords(listId,items,type,compact=false){const root=$(listId);root.replaceChildren();const data=items.filter(x=>isVisible(`${x.customer} ${x.status} ${x.id}`));if(!data.length){root.append(empty(query?'Nenhum registro encontrado.':'Nenhum registro ainda. Experimente criar um pedido no site.'));return;}data.forEach(item=>root.append(recordRow(item,type,compact)));}
+ function renderUsers(){
+   const tbody=$('users-tbody');tbody.replaceChildren();const users=A.userList().filter(u=>isVisible(`${u.name} ${u.email} ${u.role}`));$('users-empty').hidden=!!users.length;
+   for(const u of users){
+     const tr=document.createElement('tr');const main=document.createElement('td');const wrap=el('div','user-cell'),avatar=el('span','avatar '+(u.role==='admin'?'avatar-admin':''),u.name.charAt(0).toUpperCase()),label=el('span','user-detail');label.append(el('strong','',u.name),el('small','',u.email));wrap.append(avatar,label);main.append(wrap);
+     const roleTd=document.createElement('td');roleTd.append(pill(u.role==='admin'?'Administrador':'Cliente'));
+     const stat=document.createElement('td');stat.append(pill(u.active?'Ativo':'Inativo'));
+     const created=document.createElement('td');created.textContent=dateTime(u.createdAt);
+     const actions=document.createElement('td'),ctrl=el('div','user-controls');
+     if(u.id===user.id){ctrl.append(el('span','muted','Sua conta'));}
+     else{
+       const select=el('select','status-select');select.setAttribute('aria-label',`Perfil de ${u.name}`);for(const role of ['cliente','admin']){const op=el('option','',role==='admin'?'Administrador':'Cliente');op.value=role;select.append(op);}select.value=u.role;select.addEventListener('change',()=>updateAccess(u.id,{field:'role',value:select.value}));
+       const toggle=action(u.active?'Desativar':'Ativar',u.active?'danger':'',()=>updateAccess(u.id,{field:'active',value:!u.active}));ctrl.append(select,toggle);
+     }
+     actions.append(ctrl);tr.append(main,roleTd,stat,created,actions);tbody.append(tr);
+   }
+ }
+ function updateAccess(id,change){
+   const subject=A.userList().find(u=>u.id===id);if(!subject)return;
+   if(!confirm(`Deseja ${change.field==='role'?'alterar o perfil de':'alterar o status de'} ${subject.name}?`)){renderUsers();return;}
+   try{A.updateUser(id,change);UI.toast('Permissão atualizada.','success');renderAll();}catch(err){UI.toast(err.message,'error');renderAll();}
+ }
+ function renderAll(){stats();renderProducts();renderRecords('orders-list',D.getOrders(),'order');renderRecords('reservations-list',D.getReservations(),'reservation');renderRecords('recent-orders',D.getOrders().slice(0,4),'order',true);renderRecords('recent-reservations',D.getReservations().slice(0,4),'reservation',true);renderUsers();}
+ window.addEventListener('storage',renderAll);
+ go('overview');
 })();
