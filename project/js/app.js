@@ -19,21 +19,12 @@
     const fallback=D.element('div','hero-image-fallback');
     fallback.append(D.element('span','hero-image-korean','한옥'),D.element('strong','',label),D.element('span','','Gastronomia coreana'));
     return fallback;
-  }
-  document.querySelectorAll('.hero-picture img').forEach(heroImage=>{
-    const showFallback=()=>{
-      if(!heroImage.isConnected)return;
-      heroImage.replaceWith(createImageFallback('HANOK'));
-    };
-    heroImage.addEventListener('error',showFallback,{once:true});
-    if(heroImage.complete&&heroImage.naturalWidth===0)showFallback();
-  });
-  const heroCarousel=document.querySelector('[data-carousel]');
+  }  const heroCarousel=document.querySelector('[data-hero-bg-carousel]');
   if(heroCarousel){
-    const slides=[...heroCarousel.querySelectorAll('[data-slide]')];
-    const dots=[...heroCarousel.querySelectorAll('[data-carousel-dot]')];
-    const prev=heroCarousel.querySelector('[data-carousel-prev]');
-    const next=heroCarousel.querySelector('[data-carousel-next]');
+    const slides=[...heroCarousel.querySelectorAll('[data-hero-bg-slide]')];
+    const dots=[...document.querySelectorAll('[data-hero-bg-dot]')];
+    const prev=document.querySelector('[data-hero-bg-prev]');
+    const next=document.querySelector('[data-hero-bg-next]');
     let current=Math.max(0,slides.findIndex(slide=>slide.classList.contains('is-active')));
     let timer=null;
     const activate=index=>{
@@ -41,7 +32,7 @@
       slides.forEach((slide,i)=>slide.classList.toggle('is-active',i===current));
       dots.forEach((dot,i)=>{const active=i===current;dot.classList.toggle('is-active',active);active?dot.setAttribute('aria-current','true'):dot.removeAttribute('aria-current');});
     };
-    const start=()=>{if(slides.length<2)return;clearInterval(timer);timer=setInterval(()=>activate(current+1),5000);};
+    const start=()=>{if(slides.length<2)return;clearInterval(timer);timer=setInterval(()=>activate(current+1),5200);};
     const stop=()=>{clearInterval(timer);timer=null;};
     prev?.addEventListener('click',()=>{activate(current-1);start();});
     next?.addEventListener('click',()=>{activate(current+1);start();});

@@ -39,40 +39,41 @@
 
   <main id="conteudo">
     <section class="demo-banner" aria-label="Aviso de demonstração"><div class="container"><strong>Protótipo acadêmico:</strong> contas, pedidos e reservas são simulados somente neste navegador. Nenhuma solicitação ou pagamento é enviado a um serviço real.</div></section>
-    <section class="hero section" id="inicio">
-      <div class="container hero-grid" data-reveal>
-        <div class="hero-copy">
+    <section class="hero section hero-bg-hero" id="inicio">
+      <div class="hero-bg-carousel" data-hero-bg-carousel aria-label="Carrossel de imagens da apresentação">
+        <div class="hero-bg-slide is-active" data-hero-bg-slide style="background-image:url('https://images.unsplash.com/photo-1553163147-622ab57be1c7?auto=format&fit=crop&w=1600&q=80')">
+          <div class="hero-bg-fade"></div>
+        </div>
+        <div class="hero-bg-slide" data-hero-bg-slide style="background-image:url('https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1600&q=80')">
+          <div class="hero-bg-fade"></div>
+        </div>
+        <div class="hero-bg-slide" data-hero-bg-slide style="background-image:url('https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1600&q=80')">
+          <div class="hero-bg-fade"></div>
+        </div>
+        <div class="hero-bg-overlay"></div>
+      </div>
+      <div class="container hero-grid hero-grid-bg" data-reveal>
+        <div class="hero-copy hero-copy-on-bg">
           <span class="eyebrow"><span class="accent-dot"></span> Culinária coreana</span>
           <h1>HANOK: sabor e tradição <span>em perfeito equilíbrio.</span></h1>
           <p>Explore pratos inspirados na gastronomia coreana, monte seu pedido e conheça a experiência HANOK.</p>
-          <div class="actions"><a class="button button-primary" href="#cardapio">Explorar cardápio <span aria-hidden="true">→</span></a><a class="button button-outline" href="#reserva">Solicitar reserva</a></div>
-          <div class="hero-highlights"><div><strong>한옥</strong><span>Inspiração coreana</span></div><div><strong>5 valores</strong><span>Harmonia e acolhimento</span></div><div><strong>Online</strong><span>Protótipo interativo</span></div></div>
+          <div class="actions"><a class="button button-primary" href="#cardapio">Explorar cardápio <span aria-hidden="true">→</span></a><a class="button button-outline button-on-dark" href="#reserva">Solicitar reserva</a></div>
+          <div class="hero-highlights hero-highlights-dark"><div><strong>한옥</strong><span>Inspiração coreana</span></div><div><strong>5 valores</strong><span>Harmonia e acolhimento</span></div><div><strong>Online</strong><span>Protótipo interativo</span></div></div>
         </div>
-        <div class="hero-visual">
-          <div class="hero-carousel" data-carousel>
-            <div class="hero-picture carousel-stage">
-              <article class="carousel-slide is-active" data-slide>
-                <img src="https://images.unsplash.com/photo-1553163147-622ab57be1c7?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Prato coreano de arroz com acompanhamentos" width="680" height="780" fetchpriority="high">
-                <div class="dish-caption"><span>Prato em destaque</span><strong>Dolsot Bibimbap</strong><span>Vegetais, arroz e ovo em uma apresentação marcante</span></div>
-              </article>
-              <article class="carousel-slide" data-slide>
-                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Prato de carne com acompanhamentos" width="680" height="780" loading="lazy">
-                <div class="dish-caption"><span>Mais pedido</span><strong>Bulgogi especial</strong><span>Cortes selecionados com acompanhamentos inspirados na culinária coreana</span></div>
-              </article>
-              <article class="carousel-slide" data-slide>
-                <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Ambiente de restaurante contemporâneo" width="680" height="780" loading="lazy">
-                <div class="dish-caption"><span>Experiência HANOK</span><strong>Ambiente acolhedor</strong><span>Uma apresentação mais viva para valorizar a proposta do restaurante</span></div>
-              </article>
-              <button class="carousel-control prev" type="button" data-carousel-prev aria-label="Slide anterior">‹</button>
-              <button class="carousel-control next" type="button" data-carousel-next aria-label="Próximo slide">›</button>
-            </div>
-            <div class="carousel-indicators" role="tablist" aria-label="Destaques da apresentação">
-              <button class="carousel-dot is-active" type="button" data-carousel-dot aria-label="Mostrar slide 1" aria-current="true"></button>
-              <button class="carousel-dot" type="button" data-carousel-dot aria-label="Mostrar slide 2"></button>
-              <button class="carousel-dot" type="button" data-carousel-dot aria-label="Mostrar slide 3"></button>
+        <div class="hero-floating-panel">
+          <span class="hero-sticker">Tradição + afeto</span>
+          <div class="hero-panel-card">
+            <span class="hero-panel-kicker">Destaques da casa</span>
+            <strong class="hero-panel-title">Um carrossel de fundo mais imersivo</strong>
+            <p>Agora as imagens passam ao fundo da apresentação para valorizar mais a identidade visual do restaurante.</p>
+            <div class="carousel-indicators hero-indicators" role="tablist" aria-label="Destaques da apresentação">
+              <button class="carousel-dot is-active" type="button" data-hero-bg-dot aria-label="Mostrar slide 1" aria-current="true"></button>
+              <button class="carousel-dot" type="button" data-hero-bg-dot aria-label="Mostrar slide 2"></button>
+              <button class="carousel-dot" type="button" data-hero-bg-dot aria-label="Mostrar slide 3"></button>
             </div>
           </div>
-          <span class="hero-sticker">Tradição + afeto</span>
+          <button class="carousel-control prev hero-bg-control" type="button" data-hero-bg-prev aria-label="Slide anterior">‹</button>
+          <button class="carousel-control next hero-bg-control" type="button" data-hero-bg-next aria-label="Próximo slide">›</button>
         </div>
       </div>
     </section>
