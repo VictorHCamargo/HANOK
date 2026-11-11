@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HANOK - Brand System & Website UI</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            orange: '#FF5722',
+                            orangeHover: '#E64A19',
+                            orangeLight: '#FF8A65',
+                            dark: '#0F0F0F',
+                            card: '#18181B',
+                            cardHover: '#242429'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        korean: ['Noto Serif KR', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0F0F0F;
+            color: #F4F4F5;
+        }
+        .glow-orange {
+            box-shadow: 0 0 30px -5px rgba(255, 87, 34, 0.45);
+        }
+        .bg-grid-pattern {
+            background-image: radial-gradient(rgba(255, 87, 34, 0.15) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0F0F0F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272A;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF5722;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-orange selection:text-white min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-[#0F0F0F]/90 backdrop-blur-md border-b border-white/10 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Brand Logo Header (Horizontal Variant) -->
+            <a href="#inicio" class="flex items-center space-x-3 group">
+                <!-- SVG Icon Logo (Hanok Roof Design) -->
+                <div class="w-11 h-11 rounded-xl bg-brand-orange/10 border border-brand-orange/40 flex items-center justify-center p-2 group-hover:bg-brand-orange transition-all duration-300 shadow-lg shadow-brand-orange/10">
+                    <svg viewBox="0 0 100 80" class="w-full h-full fill-none stroke-brand-orange group-hover:stroke-white transition-colors duration-300" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                        <!-- Upper White Curved Roof Accent -->
+                        <path d="M 10 32 C 30 20, 70 20, 90 32" class="stroke-white group-hover:stroke-white" stroke-width="7" />
+                        <!-- Main Roof Structure -->
+                        <path d="M 16 38 C 35 27, 65 27, 84 38" />
+                        <path d="M 22 40 L 22 58 M 36 36 L 36 58 M 50 34 L 50 58 M 64 36 L 64 58 M 78 40 L 78 58" stroke-width="5" />
+                        <path d="M 14 58 L 86 58" stroke-width="6" />
+                    </svg>
+                </div>
+                <div class="flex flex-col">
+                    <div class="flex items-center space-x-1.5">
+                        <span class="text-xl font-black tracking-widest text-white leading-none">HANOK</span>
+                        <span class="text-[10px] font-korean font-semibold text-brand-orange bg-brand-orange/10 px-1 rounded border border-brand-orange/30">한옥</span>
+                    </div>
+                    <span class="text-[8px] tracking-widest text-gray-400 uppercase font-medium mt-0.5">Sabor e Tradição em Equilíbrio</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-7 text-sm font-medium">
+                <a href="#brand-system" class="text-brand-orange font-semibold flex items-center space-x-1.5 px-3 py-1 rounded-full bg-brand-orange/10 border border-brand-orange/30">
+                    <i class="fa-solid fa-palette text-xs"></i>
+                    <span>Brand Book & Logos</span>
+                </a>
+                <a href="#inicio" class="text-gray-300 hover:text-brand-orange transition-colors">Início</a>
+                <a href="#conceito" class="text-gray-300 hover:text-brand-orange transition-colors">Conceito</a>
+                <a href="#cardapio" class="text-gray-300 hover:text-brand-orange transition-colors">Cardápio</a>
+                <a href="#reserva" class="text-gray-300 hover:text-brand-orange transition-colors">Reservas</a>
+            </nav>
+
+            <!-- CTA Header -->
+            <div class="hidden md:flex items-center space-x-4">
+                <button onclick="openModal()" class="px-5 py-2.5 rounded-xl bg-brand-orange text-white font-bold text-xs uppercase tracking-wider hover:bg-brand-orangeHover transition-all duration-300 shadow-lg shadow-brand-orange/20">
+                    Mesa / Reserva
+                </button>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden text-gray-300 hover:text-white p-2">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-dark/95 border-b border-white/10 px-6 py-4 space-y-3">
+            <a href="#brand-system" onclick="toggleMobileMenu()" class="block text-brand-orange font-semibold py-1">🎨 Brand Book & Logos</a>
+            <a href="#inicio" onclick="toggleMobileMenu()" class="block text-gray-300 hover:text-brand-orange py-1">Início</a>
+            <a href="#conceito" onclick="toggleMobileMenu()" class="block text-gray-300 hover:text-brand-orange py-1">Conceito (H-A-N-O-K)</a>
+            <a href="#cardapio" onclick="toggleMobileMenu()" class="block text-gray-300 hover:text-brand-orange py-1">Cardápio</a>
+            <button onclick="toggleMobileMenu(); openModal();" class="w-full mt-2 px-5 py-3 rounded-xl bg-brand-orange text-white font-bold text-sm">
+                Fazer Reserva
+            </button>
+        </div>
+    </header>
+
+    <!-- BRAND SHOWCASE SECTION (APLICAÇÕES E VARIAÇÕES DA LOGO) -->
+    <section id="brand-system" class="pt-28 pb-16 bg-zinc-950 border-b border-white/10 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+                <div>
+                    <span class="text-brand-orange font-semibold text-xs tracking-widest uppercase flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-brand-orange"></span>
+                        Sistema de Identidade Visual
+                    </span>
+                    <h2 class="text-3xl font-extrabold text-white mt-1">Variações da Logo Selecionada</h2>
+                    <p class="text-gray-400 text-xs sm:text-sm mt-1 max-w-2xl">
+                        Aplicações da marca HANOK adaptadas para diferentes suportes (Fachada, Cardápio, App, Sacolas e Redes Sociais).
+                    </p>
+                </div>
+
+                <!-- Canvas Background Color Selector -->
+                <div class="mt-4 md:mt-0 flex items-center space-x-2 bg-brand-card p-1.5 rounded-xl border border-white/10">
+                    <span class="text-xs text-gray-400 px-2 font-medium">Testar Fundo:</span>
+                    <button onclick="setLogoBg('dark')" id="bg-btn-dark" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-orange text-white">Dark</button>
+                    <button onclick="setLogoBg('light')" id="bg-btn-light" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white">Claro</button>
+                    <button onclick="setLogoBg('orange')" id="bg-btn-orange" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white">Laranja</button>
+                </div>
+            </div>
+
+            <!-- Logo Variations Showcase Grid -->
+            <div id="logo-canvas-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-300">
+                
+                <!-- 1. LOGO PRINCIPAL (A ESCOLHIDA) -->
+                <div class="logo-box bg-[#0F0F0F] rounded-2xl p-8 border border-white/10 flex flex-col items-center justify-center text-center relative group min-h-[280px]">
+                    <span class="absolute top-4 left-4 text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-gray-400">01. Logo Principal</span>
+                    
+                    <div class="my-auto py-4">
+                        <!-- Icon SVG -->
+                        <div class="w-24 h-14 mx-auto mb-3">
+                            <svg viewBox="0 0 100 60" class="w-full h-full fill-none stroke-brand-orange" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M 8 26 C 28 14, 72 14, 92 26" stroke="#FFFFFF" stroke-width="6" />
+                                <path d="M 14 32 C 32 22, 68 22, 86 32" stroke-width="5" />
+                                <path d="M 22 35 L 22 52 M 36 31 L 36 52 M 50 29 L 50 52 M 64 31 L 64 52 M 78 35 L 78 52" stroke-width="4.5" />
+                                <path d="M 14 52 L 86 52" stroke-width="5" />
+                            </svg>
+                        </div>
+                        <h3 class="text-3xl font-black tracking-widest text-white leading-none">HANOK</h3>
+                        <span class="text-sm font-korean font-semibold text-gray-300 block my-1">한옥</span>
+                        <span class="text-[10px] tracking-widest text-brand-orange uppercase font-bold block mt-2">SABOR E TRADIÇÃO EM EQUILÍBRIO</span>
+                    </div>
+
+                    <span class="text-[10px] text-gray-500">Uso: Material Principal, Embalagens & Banner</span>
+                </div>
+
+                <!-- 2. LOGO HORIZONTAL (NAVBAR & CABEÇALHOS) -->
+                <div class="logo-box bg-[#0F0F0F] rounded-2xl p-8 border border-white/10 flex flex-col items-center justify-center text-center relative group min-h-[280px]">
+                    <span class="absolute top-4 left-4 text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-gray-400">02. Logo Horizontal</span>
+                    
+                    <div class="my-auto py-6 flex items-center space-x-4 text-left">
+                        <div class="w-16 h-12 flex-shrink-0">
+                            <svg viewBox="0 0 100 60" class="w-full h-full fill-none stroke-brand-orange" stroke-width="5" stroke-linecap="round">
+                                <path d="M 8 26 C 28 14, 72 14, 92 26" stroke="#FFFFFF" stroke-width="6" />
+                                <path d="M 14 32 C 32 22, 68 22, 86 32" stroke-width="5" />
+                                <path d="M 22 35 L 22 52 M 36 31 L 36 52 M 50 29 L 50 52 M 64 31 L 64 52 M 78 35 L 78 52" stroke-width="4.5" />
+                                <path d="M 14 52 L 86 52" stroke-width="5" />
+                            </svg>
+                        </div>
+                        <div class="border-l border-white/15 pl-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-2xl font-black tracking-widest text-white">HANOK</span>
+                                <span class="text-xs font-korean text-brand-orange">한옥</span>
+                            </div>
+                            <span class="text-[9px] tracking-wider text-gray-400 uppercase font-medium block">RESTAURANTE COREANO</span>
+                        </div>
+                    </div>
+
+                    <span class="text-[10px] text-gray-500">Uso: Cabeçalhos, Uniformes & Rodapés</span>
+                </div>
+
+                <!-- 3. MONOGRAMA / FAVICON -->
+                <div class="logo-box bg-[#0F0F0F] rounded-2xl p-8 border border-white/10 flex flex-col items-center justify-center text-center relative group min-h-[280px]">
+                    <span class="absolute top-4 left-4 text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-gray-400">03. Monograma / Ícone App</span>
+                    
+                    <div class="my-auto py-4">
+                        <div class="w-20 h-20 rounded-2xl bg-brand-orange p-3.5 mx-auto flex items-center justify-center shadow-lg shadow-brand-orange/30">
+                            <svg viewBox="0 0 100 60" class="w-full h-full fill-none stroke-white" stroke-width="6" stroke-linecap="round">
+                                <path d="M 8 26 C 28 14, 72 14, 92 26" stroke="#0F0F0F" stroke-width="7" />
+                                <path d="M 14 32 C 32 22, 68 22, 86 32" stroke-width="5" />
+                                <path d="M 22 35 L 22 52 M 50 29 L 50 52 M 78 35 L 78 52" stroke-width="5" />
+                                <path d="M 14 52 L 86 52" stroke-width="6" />
+                            </svg>
+                        </div>
+                        <span class="text-xs font-bold text-white mt-3 block">Favicon & App Icon</span>
+                    </div>
+
+                    <span class="text-[10px] text-gray-500">Uso: Redes Sociais, App e Ícone de Navegador</span>
+                </div>
+
+                <!-- 4. VERSÃO CARIMBO SELE TRADICIONAL (SEAL) -->
+                <div class="logo-box bg-[#0F0F0F] rounded-2xl p-8 border border-white/10 flex flex-col items-center justify-center text-center relative group min-h-[280px]">
+                    <span class="absolute top-4 left-4 text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-gray-400">04. Carimbo Tradicional</span>
+                    
+                    <div class="my-auto py-4">
+                        <div class="w-28 h-28 rounded-full border-2 border-dashed border-brand-orange p-2 flex items-center justify-center mx-auto">
+                            <div class="w-full h-full rounded-full border border-brand-orange flex flex-col items-center justify-center p-2">
+                                <span class="text-[8px] tracking-widest text-brand-orange uppercase font-bold">SEOUL • SP</span>
+                                <div class="w-10 h-6 my-0.5">
+                                    <svg viewBox="0 0 100 60" class="w-full h-full fill-none stroke-white" stroke-width="6">
+                                        <path d="M 8 26 C 28 14, 72 14, 92 26" stroke="#FF5722" stroke-width="7" />
+                                        <path d="M 14 32 C 32 22, 68 22, 86 32" />
+                                        <path d="M 14 52 L 86 52" />
+                                    </svg>
+                                </div>
+                                <span class="text-xs font-black text-white font-korean">한옥</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <span class="text-[10px] text-gray-500">Uso: Selo de Qualidade & Menu Impresso</span>
+                </div>
+
+                <!-- 5. VERSÃO MINIMALISTA DARK GLOW -->
+                <div class="logo-box bg-[#0F0F0F] rounded-2xl p-8 border border-white/10 flex flex-col items-center justify-center text-center relative group min-h-[280px] lg:col-span-2">
+                    <span class="absolute top-4 left-4 text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-gray-400">05. Assinatura Neon / Fachada Noturna</span>
+                    
+                    <div class="my-auto py-6 flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-8">
+                        <div class="p-6 rounded-2xl bg-zinc-900/80 border border-brand-orange/30 shadow-2xl shadow-brand-orange/20 flex items-center space-x-6">
+                            <div class="w-16 h-12">
+                                <svg viewBox="0 0 100 60" class="w-full h-full fill-none stroke-brand-orange" stroke-width="5">
+                                    <path d="M 8 26 C 28 14, 72 14, 92 26" stroke="#FFFFFF" stroke-width="6" />
+                                    <path d="M 14 32 C 32 22, 68 22, 86 32" />
+                                    <path d="M 22 35 L 22 52 M 50 29 L 50 52 M 78 35 L 78 52" />
+                                    <path d="M 14 52 L 86 52" />
+                                </svg>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="text-2xl font-black text-white tracking-widest">HANOK</h4>
+                                <span class="text-xs text-brand-orange font-bold uppercase tracking-widest">K-GASTRONOMY</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <span class="text-[10px] text-gray-500">Uso: Letreiro Neon da Fachada & Sinalização Noturna</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- HERO SECTION OF THE RESTAURANT WEBSITE -->
+    <section id="inicio" class="relative pt-24 pb-20 md:pt-36 md:pb-32 overflow-hidden bg-grid-pattern">
+        <!-- Orange Glow Backdrop -->
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-orange/15 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Text -->
+                <div class="lg:col-span-7 text-center lg:text-left">
+                    <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/30 text-brand-orange text-xs uppercase tracking-widest font-bold mb-6">
+                        <span class="w-2 h-2 rounded-full bg-brand-orange animate-pulse"></span>
+                        <span>Culinária Coreana Autêntica</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6">
+                        HANOK: Sabor e Tradição <br class="hidden sm:block"/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange via-brand-orangeLight to-white">em Perfeito Equilíbrio</span>.
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-gray-300 max-w-2xl mb-8 mx-auto lg:mx-0 font-light leading-relaxed">
+                        Experimente a verdadeira essência da gastronomia coreana. Ingredientes selecionados, fermentação artesanal e o aconchego de uma casa tradicional.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                        <button onclick="openModal()" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-brand-orange text-white font-bold text-sm tracking-wide hover:bg-brand-orangeHover transition-all duration-300 glow-orange flex items-center justify-center space-x-3">
+                            <i class="fa-solid fa-utensils"></i>
+                            <span>Reservar uma Mesa</span>
+                        </button>
+                        <a href="#cardapio" class="w-full sm:w-auto px-8 py-4 rounded-xl border border-white/20 bg-white/5 text-white font-semibold text-sm text-center hover:bg-white/10 transition-all duration-300">
+                            Ver Cardápio
+                        </a>
+                    </div>
+
+                    <!-- Quick Specs -->
+                    <div class="mt-12 pt-8 border-t border-white/10 grid grid-cols-3 gap-4 text-center lg:text-left">
+                        <div>
+                            <span class="block text-xl sm:text-2xl font-bold text-white">100%</span>
+                            <span class="text-xs text-gray-400">Receitas Tradicionais</span>
+                        </div>
+                        <div>
+                            <span class="block text-xl sm:text-2xl font-bold text-brand-orange">Kimchi</span>
+                            <span class="text-xs text-gray-400">Fermentado na Casa</span>
+                        </div>
+                        <div>
+                            <span class="block text-xl sm:text-2xl font-bold text-white">4.9 ★</span>
+                            <span class="text-xs text-gray-400">+1.200 Avaliações</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Visual Dish Display -->
+                <div class="lg:col-span-5 relative">
+                    <div class="relative mx-auto max-w-md lg:max-w-none">
+                        <!-- Main Card image -->
+                        <div class="relative rounded-3xl overflow-hidden border border-white/15 bg-brand-card p-3 shadow-2xl">
+                            <img src="https://images.unsplash.com/photo-1553163147-622ab57be1c7?auto=format&fit=crop&w=800&q=80" 
+                                 alt="Dolsot Bibimbap Coreano" 
+                                 class="w-full h-[400px] object-cover rounded-2xl"
+                                 onerror="this.src='https://placehold.co/600x800/18181B/FF5722?text=HANOK+Bibimbap'">
+                            
+                            <!-- Overlay Badge with selected logo -->
+                            <div class="absolute bottom-6 left-6 right-6 p-4 rounded-xl bg-brand-dark/95 backdrop-blur-md border border-white/15 flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 rounded-lg bg-brand-orange/20 border border-brand-orange/40 flex items-center justify-center p-1">
+                                        <svg viewBox="0 0 100 60" class="w-full h-full fill-none stroke-brand-orange" stroke-width="6">
+                                            <path d="M 8 26 C 28 14, 72 14, 92 26" stroke="#FFF" stroke-width="7" />
+                                            <path d="M 14 32 C 32 22, 68 22, 86 32" />
+                                            <path d="M 14 52 L 86 52" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-white text-xs">Dolsot Bibimbap</h4>
+                                        <p class="text-[10px] text-gray-400">Servido em pedra vulcânica aquecida</p>
+                                    </div>
+                                </div>
+                                <span class="text-brand-orange font-bold text-base">R$ 78</span>
+                            </div>
+                        </div>
+
+                        <!-- Floating Badge -->
+                        <div class="absolute -top-5 -left-5 bg-brand-orange text-white px-4 py-3 rounded-2xl font-bold shadow-xl hidden sm:flex items-center space-x-3 border border-white/20">
+                            <i class="fa-solid fa-fire text-xl"></i>
+                            <div class="text-left">
+                                <span class="block text-[10px] uppercase tracking-wider opacity-80">Prato Estrela</span>
+                                <span class="text-xs">K-BBQ & Fermentados</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- H-A-N-O-K CONCEPT SECTION -->
+    <section id="conceito" class="py-24 bg-brand-dark border-t border-white/5 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-brand-orange font-semibold text-xs tracking-widest uppercase">Significado das Letras</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Conceito <span class="text-brand-orange">H-A-N-O-K</span></h2>
+                <p class="text-gray-400 text-sm mt-3">
+                    Inspirado na essência conceitual dos grandes nomes da gastronomia oriental, nosso acrônimo guia cada preparação:
+                </p>
+            </div>
+
+            <!-- 5 Letter Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                
+                <!-- H -->
+                <div class="bg-brand-card p-6 rounded-2xl border border-white/10 hover:border-brand-orange/60 transition-all duration-300 group flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-brand-orange/10 border border-brand-orange/30 flex items-center justify-center text-brand-orange text-2xl font-black mb-5 group-hover:bg-brand-orange group-hover:text-white transition-colors duration-300">
+                            H
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-1">Harmonia</h3>
+                        <span class="text-xs font-korean text-brand-orange block mb-3">Eum-Yang (음양)</span>
+                        <p class="text-gray-400 text-xs leading-relaxed">
+                            O equilíbrio perfeito entre cinco cores, texturas e os cinco sabores tradicionais.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-3 border-t border-white/5 text-[10px] text-gray-500 uppercase font-semibold">
+                        Equilíbrio de Sabores
+                    </div>
+                </div>
+
+                <!-- A -->
+                <div class="bg-brand-card p-6 rounded-2xl border border-white/10 hover:border-brand-orange/60 transition-all duration-300 group flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-brand-orange/10 border border-brand-orange/30 flex items-center justify-center text-brand-orange text-2xl font-black mb-5 group-hover:bg-brand-orange group-hover:text-white transition-colors duration-300">
+                            A
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-1">Autenticidade</h3>
+                        <span class="text-xs font-korean text-brand-orange block mb-3">K-Flavor (정통)</span>
+                        <p class="text-gray-400 text-xs leading-relaxed">
+                            Receitas originais sem atalhos, respeitando o tempo de maturação dos temperos.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-3 border-t border-white/5 text-[10px] text-gray-500 uppercase font-semibold">
+                        Tradição Fiel
+                    </div>
+                </div>
+
+                <!-- N -->
+                <div class="bg-brand-card p-6 rounded-2xl border border-white/10 hover:border-brand-orange/60 transition-all duration-300 group flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-brand-orange/10 border border-brand-orange/30 flex items-center justify-center text-brand-orange text-2xl font-black mb-5 group-hover:bg-brand-orange group-hover:text-white transition-colors duration-300">
+                            N
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-1">Nutrição</h3>
+                        <span class="text-xs font-korean text-brand-orange block mb-3">Yak-sik (약식)</span>
+                        <p class="text-gray-400 text-xs leading-relaxed">
+                            "A comida é o primeiro remédio". Probióticos vivos e ingredientes funcionais.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-3 border-t border-white/5 text-[10px] text-gray-500 uppercase font-semibold">
+                        Saúde & Vida
+                    </div>
+                </div>
+
+                <!-- O -->
+                <div class="bg-brand-card p-6 rounded-2xl border border-white/10 hover:border-brand-orange/60 transition-all duration-300 group flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-brand-orange/10 border border-brand-orange/30 flex items-center justify-center text-brand-orange text-2xl font-black mb-5 group-hover:bg-brand-orange group-hover:text-white transition-colors duration-300">
+                            O
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-1">Origem</h3>
+                        <span class="text-xs font-korean text-brand-orange block mb-3">Bap (밥)</span>
+                        <p class="text-gray-400 text-xs leading-relaxed">
+                            Respeito ao cultivo do arroz e à arquitetura acolhedora das históricas casas Hanok.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-3 border-t border-white/5 text-[10px] text-gray-500 uppercase font-semibold">
+                        Raízes Culturais
+                    </div>
+                </div>
+
+                <!-- K -->
+                <div class="bg-brand-card p-6 rounded-2xl border border-white/10 hover:border-brand-orange/60 transition-all duration-300 group flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-brand-orange/10 border border-brand-orange/30 flex items-center justify-center text-brand-orange text-2xl font-black mb-5 group-hover:bg-brand-orange group-hover:text-white transition-colors duration-300">
+                            K
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-1">K-Jeong</h3>
+                        <span class="text-xs font-korean text-brand-orange block mb-3">Afeto (정)</span>
+                        <p class="text-gray-400 text-xs leading-relaxed">
+                            O sentimento de acolhimento e carinho ao servir quem se senta à nossa mesa.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-3 border-t border-white/5 text-[10px] text-gray-500 uppercase font-semibold">
+                        Hospitalidade
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE MENU SECTION -->
+    <section id="cardapio" class="py-24 bg-zinc-950 relative border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <span class="text-brand-orange font-semibold text-xs tracking-widest uppercase">Gastronomia Coreana</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Nosso Cardápio</h2>
+                </div>
+
+                <!-- Menu Tabs -->
+                <div class="mt-6 md:mt-0 flex flex-wrap gap-2 bg-brand-dark p-1.5 rounded-xl border border-white/10">
+                    <button onclick="filterMenu('todos')" id="tab-todos" class="menu-tab px-4 py-2 rounded-lg text-xs font-bold bg-brand-orange text-white">Todos</button>
+                    <button onclick="filterMenu('entradas')" id="tab-entradas" class="menu-tab px-4 py-2 rounded-lg text-xs font-bold text-gray-400 hover:text-white">Entradas</button>
+                    <button onclick="filterMenu('bbq')" id="tab-bbq" class="menu-tab px-4 py-2 rounded-lg text-xs font-bold text-gray-400 hover:text-white">K-BBQ & Pratos</button>
+                    <button onclick="filterMenu('bebidas')" id="tab-bebidas" class="menu-tab px-4 py-2 rounded-lg text-xs font-bold text-gray-400 hover:text-white">Bebidas & Soju</button>
+                </div>
+            </div>
+
+            <!-- Menu Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Item 1 -->
+                <div class="menu-card entradas bg-brand-card rounded-2xl border border-white/10 overflow-hidden hover:border-brand-orange/40 transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1583032015879-e5022757608b?auto=format&fit=crop&w=600&q=80" alt="Tteokbokki" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/18181B/FF5722?text=Tteokbokki'">
+                            <span class="absolute top-3 right-3 bg-brand-dark/90 px-3 py-1 rounded-full text-[10px] font-bold text-brand-orange border border-brand-orange/30">Picante 🌶️</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-white">Tteokbokki Tradicional</h3>
+                                <span class="text-brand-orange font-extrabold text-base">R$ 48</span>
+                            </div>
+                            <p class="text-gray-400 text-xs leading-relaxed mb-4">Bolinhos de arroz macios com eomuk (bolo de peixe) em molho reduzido de Gochujang artesanal.</p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0 border-t border-white/5 pt-4 flex justify-between items-center text-xs">
+                        <span class="text-gray-500">Entrada Popular</span>
+                        <button onclick="openModal()" class="text-brand-orange font-bold hover:underline">Pedir na mesa →</button>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="menu-card bbq bg-brand-card rounded-2xl border border-white/10 overflow-hidden hover:border-brand-orange/40 transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80" alt="Bulgogi" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/18181B/FF5722?text=Bulgogi'">
+                            <span class="absolute top-3 right-3 bg-brand-dark/90 px-3 py-1 rounded-full text-[10px] font-bold text-brand-orange border border-brand-orange/30">K-BBQ</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-white">Bulgogi Premium</h3>
+                                <span class="text-brand-orange font-extrabold text-base">R$ 89</span>
+                            </div>
+                            <p class="text-gray-400 text-xs leading-relaxed mb-4">Fatias de contra-filé marinadas em molho de pera nashi, alho e óleo de gergelim prensado a frio.</p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0 border-t border-white/5 pt-4 flex justify-between items-center text-xs">
+                        <span class="text-gray-500">Servido na chapa</span>
+                        <button onclick="openModal()" class="text-brand-orange font-bold hover:underline">Pedir na mesa →</button>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="menu-card bbq bg-brand-card rounded-2xl border border-white/10 overflow-hidden hover:border-brand-orange/40 transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1553163147-622ab57be1c7?auto=format&fit=crop&w=600&q=80" alt="Bibimbap" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/18181B/FF5722?text=Dolsot+Bibimbap'">
+                            <span class="absolute top-3 right-3 bg-brand-dark/90 px-3 py-1 rounded-full text-[10px] font-bold text-white border border-white/20">Clássico</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-white">Dolsot Bibimbap</h3>
+                                <span class="text-brand-orange font-extrabold text-base">R$ 78</span>
+                            </div>
+                            <p class="text-gray-400 text-xs leading-relaxed mb-4">Tigela de pedra aquecida com arroz, vegetais temperados, gema crua e carne com gergelim.</p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0 border-t border-white/5 pt-4 flex justify-between items-center text-xs">
+                        <span class="text-gray-500">Prato Assinatura</span>
+                        <button onclick="openModal()" class="text-brand-orange font-bold hover:underline">Pedir na mesa →</button>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="menu-card entradas bg-brand-card rounded-2xl border border-white/10 overflow-hidden hover:border-brand-orange/40 transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&w=600&q=80" alt="Frango Coreano" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/18181B/FF5722?text=Dakgangjeong'">
+                            <span class="absolute top-3 right-3 bg-brand-dark/90 px-3 py-1 rounded-full text-[10px] font-bold text-brand-orange border border-brand-orange/30">Crocante</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-white">Dakgangjeong</h3>
+                                <span class="text-brand-orange font-extrabold text-base">R$ 54</span>
+                            </div>
+                            <p class="text-gray-400 text-xs leading-relaxed mb-4">Coxas de frango ultra crocantes envoltas em molho agridoce de alho e pimenta leve.</p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0 border-t border-white/5 pt-4 flex justify-between items-center text-xs">
+                        <span class="text-gray-500">Ideal para compartilhar</span>
+                        <button onclick="openModal()" class="text-brand-orange font-bold hover:underline">Pedir na mesa →</button>
+                    </div>
+                </div>
+
+                <!-- Item 5 -->
+                <div class="menu-card bebidas bg-brand-card rounded-2xl border border-white/10 overflow-hidden hover:border-brand-orange/40 transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-48 bg-zinc-900 flex items-center justify-center border-b border-white/5">
+                            <i class="fa-solid fa-bottle-droplet text-6xl text-brand-orange/40"></i>
+                            <span class="absolute top-3 right-3 bg-brand-dark/90 px-3 py-1 rounded-full text-[10px] font-bold text-brand-orange border border-brand-orange/30">Destilado</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-white">Soju Chamisul Fresh</h3>
+                                <span class="text-brand-orange font-extrabold text-base">R$ 42</span>
+                            </div>
+                            <p class="text-gray-400 text-xs leading-relaxed mb-4">Destilado coreano purificado através de carvão de bambu. Suave e icônico. (360ml)</p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0 border-t border-white/5 pt-4 flex justify-between items-center text-xs">
+                        <span class="text-gray-500">Harmonização Perfeita</span>
+                        <button onclick="openModal()" class="text-brand-orange font-bold hover:underline">Pedir na mesa →</button>
+                    </div>
+                </div>
+
+                <!-- Item 6 -->
+                <div class="menu-card bebidas bg-brand-card rounded-2xl border border-white/10 overflow-hidden hover:border-brand-orange/40 transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-48 bg-zinc-900 flex items-center justify-center border-b border-white/5">
+                            <i class="fa-solid fa-wine-glass text-6xl text-brand-orange/40"></i>
+                            <span class="absolute top-3 right-3 bg-brand-dark/90 px-3 py-1 rounded-full text-[10px] font-bold text-white border border-white/20">Artesanal</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-white">Makgeolli Tradicional</h3>
+                                <span class="text-brand-orange font-extrabold text-base">R$ 58</span>
+                            </div>
+                            <p class="text-gray-400 text-xs leading-relaxed mb-4">Vinho de arroz fermentado naturalmente na casa, cremoso e levemente efervescente. (750ml)</p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0 border-t border-white/5 pt-4 flex justify-between items-center text-xs">
+                        <span class="text-gray-500">Fermentação Própria</span>
+                        <button onclick="openModal()" class="text-brand-orange font-bold hover:underline">Pedir na mesa →</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- RESERVATION SECTION & MODAL TRIGGER -->
+    <section id="reserva" class="py-20 bg-brand-dark border-t border-white/10 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gradient-to-br from-brand-card via-zinc-900 to-brand-card rounded-3xl p-8 sm:p-12 border border-brand-orange/30 relative overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    <div class="lg:col-span-8">
+                        <span class="text-brand-orange font-bold text-xs uppercase tracking-widest">Atendimento Exclusivo</span>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1 mb-3">Garanta sua mesa na casa HANOK</h2>
+                        <p class="text-gray-300 text-sm max-w-xl leading-relaxed">
+                            Viva a experiência de saborear o autêntico churrasco coreano e fermentados tradicionais em um ambiente acolhedor.
+                        </p>
+                    </div>
+
+                    <div class="lg:col-span-4 flex justify-start lg:justify-end">
+                        <button onclick="openModal()" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-brand-orange text-white font-bold text-sm tracking-wide hover:bg-brand-orangeHover transition-all duration-300 glow-orange">
+                            Fazer Reserva Online
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-white/10 pt-16 pb-12 text-gray-400 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+                
+                <!-- Logo & About -->
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-lg bg-brand-orange flex items-center justify-center p-1.5">
+                            <svg viewBox="0 0 100 60" class="w-full h-full fill-none stroke-white" stroke-width="6">
+                                <path d="M 8 26 C 28 14, 72 14, 92 26" stroke="#0F0F0F" stroke-width="7" />
+                                <path d="M 14 32 C 32 22, 68 22, 86 32" />
+                                <path d="M 14 52 L 86 52" />
+                            </svg>
+                        </div>
+                        <span class="text-xl font-black tracking-widest text-white">HANOK</span>
+                    </div>
+                    <p class="text-xs text-gray-400 leading-relaxed">
+                        HANOK — Sabor e Tradição em Equilíbrio. Culinária coreana artesanal no coração dos Jardins.
+                    </p>
+                    <div class="flex space-x-4 text-brand-orange">
+                        <a href="#" class="hover:text-white"><i class="fa-brands fa-instagram text-lg"></i></a>
+                        <a href="#" class="hover:text-white"><i class="fa-brands fa-facebook text-lg"></i></a>
+                        <a href="#" class="hover:text-white"><i class="fa-brands fa-whatsapp text-lg"></i></a>
+                    </div>
+                </div>
+
+                <!-- Horários -->
+                <div>
+                    <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Horários</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li class="flex justify-between">
+                            <span>Terça a Sexta:</span>
+                            <span class="text-white font-medium">18h00 - 23h00</span>
+                        </li>
+                        <li class="flex justify-between">
+                            <span>Sábado & Domingo:</span>
+                            <span class="text-white font-medium">12h00 - 23h30</span>
+                        </li>
+                        <li class="flex justify-between text-gray-500">
+                            <span>Segunda-feira:</span>
+                            <span>Fechado</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Localização -->
+                <div>
+                    <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Localização</h4>
+                    <p class="text-xs text-gray-300 leading-relaxed mb-2">
+                        <i class="fa-solid fa-location-dot text-brand-orange mr-2"></i>
+                        Alameda dos Pinheiros, 1040 - Jardins, São Paulo - SP
+                    </p>
+                    <p class="text-xs text-gray-300">
+                        <i class="fa-solid fa-phone text-brand-orange mr-2"></i>
+                        (11) 98765-4321
+                    </p>
+                </div>
+
+                <!-- Slogan Seal -->
+                <div class="flex flex-col items-center justify-center p-4 rounded-2xl bg-brand-card border border-white/10 text-center">
+                    <span class="text-xs font-korean text-brand-orange font-bold">한옥 식당</span>
+                    <span class="text-[10px] text-gray-300 uppercase font-bold tracking-wider mt-1">Sabor e Tradição em Equilíbrio</span>
+                </div>
+
+            </div>
+
+            <div class="border-t border-white/10 pt-6 text-center text-xs text-gray-600">
+                &copy; 2026 HANOK Culinária Coreana. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE RESERVATION MODAL -->
+    <div id="reservation-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-brand-card border border-white/15 rounded-3xl max-w-md w-full p-6 sm:p-8 relative shadow-2xl">
+            
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div class="mb-6">
+                <span class="text-brand-orange font-bold text-xs uppercase tracking-widest">Reserva Online</span>
+                <h3 class="text-2xl font-extrabold text-white mt-1">Reserve sua Mesa</h3>
+            </div>
+
+            <form id="reservation-form" onsubmit="handleReservation(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Nome Completo</label>
+                    <input type="text" required placeholder="Seu nome" class="w-full px-4 py-3 rounded-xl bg-brand-dark border border-white/10 text-white text-sm focus:outline-none focus:border-brand-orange">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Data</label>
+                        <input type="date" required class="w-full px-4 py-3 rounded-xl bg-brand-dark border border-white/10 text-white text-sm focus:outline-none focus:border-brand-orange">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Horário</label>
+                        <select required class="w-full px-4 py-3 rounded-xl bg-brand-dark border border-white/10 text-white text-sm focus:outline-none focus:border-brand-orange">
+                            <option value="">Selecione</option>
+                            <option>18:30</option>
+                            <option>19:30</option>
+                            <option>20:30</option>
+                            <option>21:30</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Número de Pessoas</label>
+                    <select required class="w-full px-4 py-3 rounded-xl bg-brand-dark border border-white/10 text-white text-sm focus:outline-none focus:border-brand-orange">
+                        <option value="2">2 Pessoas</option>
+                        <option value="4">4 Pessoas</option>
+                        <option value="6">6 Pessoas</option>
+                        <option value="8">Mesa Família (8+)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full py-4 rounded-xl bg-brand-orange text-white font-bold text-sm hover:bg-brand-orangeHover transition-all duration-300 mt-2 glow-orange">
+                    Confirmar Reserva
+                </button>
+            </form>
+
+            <div id="reservation-success" class="hidden text-center py-8 space-y-4">
+                <div class="w-16 h-16 rounded-full bg-brand-orange/20 border border-brand-orange text-brand-orange flex items-center justify-center mx-auto text-2xl">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white">Reserva Solicitada!</h4>
+                <p class="text-xs text-gray-400">Enviamos a confirmação por SMS/WhatsApp. Esperamos você no HANOK!</p>
+                <button onclick="closeModal()" class="px-6 py-2.5 rounded-xl bg-white/10 text-white font-semibold text-xs hover:bg-white/20">
+                    Fechar
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT FOR INTERACTIVITY -->
+    <script>
+        // Interactive Menu Filtering
+        function filterMenu(category) {
+            const items = document.querySelectorAll('.menu-card');
+            const tabs = document.querySelectorAll('.menu-tab');
+            
+            tabs.forEach(tab => {
+                tab.classList.remove('bg-brand-orange', 'text-white');
+                tab.classList.add('text-gray-400');
+            });
+
+            const activeTab = document.getElementById(`tab-${category}`);
+            if (activeTab) {
+                activeTab.classList.add('bg-brand-orange', 'text-white');
+                activeTab.classList.remove('text-gray-400');
+            }
+
+            items.forEach(item => {
+                if (category === 'todos' || item.classList.contains(category)) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        }
+
+        // Logo Canvas Background Switcher
+        function setLogoBg(mode) {
+            const boxes = document.querySelectorAll('.logo-box');
+            const btnDark = document.getElementById('bg-btn-dark');
+            const btnLight = document.getElementById('bg-btn-light');
+            const btnOrange = document.getElementById('bg-btn-orange');
+
+            [btnDark, btnLight, btnOrange].forEach(btn => {
+                btn.classList.remove('bg-brand-orange', 'text-white');
+                btn.classList.add('text-gray-400');
+            });
+
+            if (mode === 'dark') {
+                btnDark.classList.add('bg-brand-orange', 'text-white');
+                boxes.forEach(box => {
+                    box.style.backgroundColor = '#0F0F0F';
+                });
+            } else if (mode === 'light') {
+                btnLight.classList.add('bg-brand-orange', 'text-white');
+                boxes.forEach(box => {
+                    box.style.backgroundColor = '#F4F4F5';
+                });
+            } else if (mode === 'orange') {
+                btnOrange.classList.add('bg-brand-orange', 'text-white');
+                boxes.forEach(box => {
+                    box.style.backgroundColor = '#FF5722';
+                });
+            }
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Modal Handlers
+        function openModal() {
+            document.getElementById('reservation-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('reservation-modal').classList.add('hidden');
+            document.getElementById('reservation-form').classList.remove('hidden');
+            document.getElementById('reservation-success').classList.add('hidden');
+        }
+
+        function handleReservation(e) {
+            e.preventDefault();
+            document.getElementById('reservation-form').classList.add('hidden');
+            document.getElementById('reservation-success').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
