@@ -10,17 +10,46 @@
   const cart = new Map(Array.isArray(initial)?initial.filter(x=>Array.isArray(x)&&typeof x[0]==='string'&&Number.isInteger(x[1])&&x[1]>0&&x[1]<=99):[]);
   const persistCart=()=>{try{sessionStorage.setItem(CART_KEY,JSON.stringify([...cart]));}catch{}};
   const requestLogin=()=>{UI?.toast('Entre ou crie uma conta para concluir.','info');const target='login.html?next='+encodeURIComponent('index.html#cardapio');setTimeout(()=>location.assign(target),550);};
-  // Fallback visual quando a foto remota do destaque não estiver disponível.
-  const heroImage=document.querySelector('.hero-picture > img');
-  if(heroImage){
+  const CATEGORY_FALLBACKS={
+    entradas:'https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1200&q=80',
+    pratos:'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80',
+    bebidas:'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1200&q=80'
+  };
+  function createImageFallback(label='HANOK'){
+    const fallback=D.element('div','hero-image-fallback');
+    fallback.append(D.element('span','hero-image-korean','한옥'),D.element('strong','',label),D.element('span','','Gastronomia coreana'));
+    return fallback;
+  }
+  document.querySelectorAll('.hero-picture img').forEach(heroImage=>{
     const showFallback=()=>{
       if(!heroImage.isConnected)return;
-      const fallback=D.element('div','hero-image-fallback');
-      fallback.append(D.element('span','hero-image-korean','한옥'),D.element('strong','','HANOK'),D.element('span','','Gastronomia coreana'));
-      heroImage.replaceWith(fallback);
+      heroImage.replaceWith(createImageFallback('HANOK'));
     };
     heroImage.addEventListener('error',showFallback,{once:true});
     if(heroImage.complete&&heroImage.naturalWidth===0)showFallback();
+  });
+  const heroCarousel=document.querySelector('[data-carousel]');
+  if(heroCarousel){
+    const slides=[...heroCarousel.querySelectorAll('[data-slide]')];
+    const dots=[...heroCarousel.querySelectorAll('[data-carousel-dot]')];
+    const prev=heroCarousel.querySelector('[data-carousel-prev]');
+    const next=heroCarousel.querySelector('[data-carousel-next]');
+    let current=Math.max(0,slides.findIndex(slide=>slide.classList.contains('is-active')));
+    let timer=null;
+    const activate=index=>{
+      current=(index+slides.length)%slides.length;
+      slides.forEach((slide,i)=>slide.classList.toggle('is-active',i===current));
+      dots.forEach((dot,i)=>{const active=i===current;dot.classList.toggle('is-active',active);active?dot.setAttribute('aria-current','true'):dot.removeAttribute('aria-current');});
+    };
+    const start=()=>{if(slides.length<2)return;clearInterval(timer);timer=setInterval(()=>activate(current+1),5000);};
+    const stop=()=>{clearInterval(timer);timer=null;};
+    prev?.addEventListener('click',()=>{activate(current-1);start();});
+    next?.addEventListener('click',()=>{activate(current+1);start();});
+    dots.forEach((dot,index)=>dot.addEventListener('click',()=>{activate(index);start();}));
+    heroCarousel.addEventListener('mouseenter',stop);
+    heroCarousel.addEventListener('mouseleave',start);
+    document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+    activate(current);start();
   }
   let filter = 'todos';
   let toastTimer;
@@ -45,15 +74,27 @@
   function makeProductCard(p){
     const article=D.element('article','product-card');
     const picture=D.element('div','product-image');
-    if(p.image){
-      const img=document.createElement('img');img.src=D.safeImage(p.image);img.alt=`Imagem ilustrativa: ${p.name}`;img.loading='lazy';
-      img.addEventListener('error',()=>{img.remove();picture.prepend(D.element('span','no-image','Imagem indisponível'));},{once:true});picture.append(img);
+    const imageUrl=D.safeImage(p.image)||CATEGORY_FALLBACKS[p.category]||'';
+    if(imageUrl){
+      const img=document.createElement('img');img.src=imageUrl;img.alt=`Imagem ilustrativa: ${p.name}`;img.loading='lazy';
+      img.addEventListener('error',()=>{
+        const fallbackUrl=CATEGORY_FALLBACKS[p.category]||'';
+        if(fallbackUrl&&img.src!==fallbackUrl){img.src=fallbackUrl;return;}
+        img.remove();picture.prepend(D.element('span','no-image','Imagem indisponível'));
+      },{once:true});
+      picture.append(img);
     }else picture.append(D.element('span','no-image',p.name));
     picture.append(D.element('span','product-tag',D.CATEGORIES[p.category]));
+    const overlay=D.element('div','product-image-overlay');
+    overlay.append(D.element('strong','product-image-title',p.name),D.element('span','product-visual-note','Unsplash · imagem ilustrativa'));
+    picture.append(overlay);
     const content=D.element('div','product-content');const heading=D.element('div','product-heading');
     heading.append(D.element('h3','',p.name),D.element('span','price',D.money(p.price)));
-    content.append(heading,D.element('p','',p.description));
-    const add=D.element('button','button button-primary button-wide','Adicionar ao pedido');add.type='button';add.addEventListener('click',()=>addToCart(p.id));content.append(add);
+    const description=D.element('p','',p.description);
+    const meta=D.element('div','product-meta');
+    meta.append(D.element('span','menu-meta-chip',D.CATEGORIES[p.category]),D.element('span','menu-meta-chip menu-meta-chip-soft',p.category==='bebidas'?'Item ilustrativo':'Receita destaque'));
+    const add=D.element('button','button button-primary button-wide','Adicionar ao pedido');add.type='button';add.addEventListener('click',()=>addToCart(p.id));
+    content.append(heading,description,meta,add);
     article.append(picture,content);return article;
   }
   function renderMenu(){

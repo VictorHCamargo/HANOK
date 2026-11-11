@@ -3,12 +3,12 @@
   'use strict';
   const PREFIX = 'hanok:demo:v1:';
   const DEFAULT_PRODUCTS = Object.freeze([
-    {id:'demo-tteokbokki',name:'Tteokbokki Tradicional',description:'Bolinhos de arroz ao molho coreano de gochujang.',category:'entradas',price:48,image:'https://images.unsplash.com/photo-1583032015879-e5022757608b?auto=format&fit=crop&w=700&q=80'},
-    {id:'demo-bulgogi',name:'Bulgogi',description:'Carne marinada em molho de inspiração coreana, com gergelim.',category:'pratos',price:89,image:'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=700&q=80'},
-    {id:'demo-bibimbap',name:'Dolsot Bibimbap',description:'Tigela de arroz com vegetais temperados e acompanhamentos.',category:'pratos',price:78,image:'https://images.unsplash.com/photo-1553163147-622ab57be1c7?auto=format&fit=crop&w=700&q=80'},
-    {id:'demo-dakgangjeong',name:'Dakgangjeong',description:'Frango crocante com molho levemente picante e agridoce.',category:'entradas',price:54,image:'https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&w=700&q=80'},
-    {id:'demo-soju',name:'Soju (exemplo)',description:'Bebida coreana. Item ilustrativo, destinado a maiores de 18 anos.',category:'bebidas',price:42,image:''},
-    {id:'demo-makgeolli',name:'Makgeolli (exemplo)',description:'Bebida fermentada de arroz. Item ilustrativo para maiores de 18 anos.',category:'bebidas',price:58,image:''}
+    {id:'demo-tteokbokki',name:'Tteokbokki Tradicional',description:'Bolinhos de arroz ao molho coreano de gochujang.',category:'entradas',price:48,image:'https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1200&q=80'},
+    {id:'demo-bulgogi',name:'Bulgogi',description:'Carne marinada em molho de inspiração coreana, com gergelim.',category:'pratos',price:89,image:'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80'},
+    {id:'demo-bibimbap',name:'Dolsot Bibimbap',description:'Tigela de arroz com vegetais temperados e acompanhamentos.',category:'pratos',price:78,image:'https://images.unsplash.com/photo-1553163147-622ab57be1c7?auto=format&fit=crop&w=1200&q=80'},
+    {id:'demo-dakgangjeong',name:'Dakgangjeong',description:'Frango crocante com molho levemente picante e agridoce.',category:'entradas',price:54,image:'https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&w=1200&q=80'},
+    {id:'demo-soju',name:'Soju (exemplo)',description:'Bebida coreana. Item ilustrativo, destinado a maiores de 18 anos.',category:'bebidas',price:42,image:'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1200&q=80'},
+    {id:'demo-makgeolli',name:'Makgeolli (exemplo)',description:'Bebida fermentada de arroz. Item ilustrativo para maiores de 18 anos.',category:'bebidas',price:58,image:'https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=80'}
   ]);
   const CATEGORIES = Object.freeze({entradas:'Entradas',pratos:'Pratos',bebidas:'Bebidas'});
   const ORDER_STATUSES = Object.freeze(['Recebido','Em preparo','Pronto','Concluído','Cancelado']);
